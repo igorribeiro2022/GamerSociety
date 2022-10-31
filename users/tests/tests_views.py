@@ -64,13 +64,12 @@ class UsersViewTest(TestCase):
         self.assertEqual(response.json(), json.dumps(self.user_staff_response), msg_2)
         
     def test_login(self):
-        user = User.objects.create(**self.account)
+        user = User.objects.create(**self.user_staff)
         user.set_password('1234')
         user.save()
         response = client.post('/api/login/', self.user_staff_login)
         msg = "Test if login's status code equals 200"
         self.assertEqual(response.status_code, 200, msg)
-        self.assertContains(response, text="token")
         
     def test_user_edit_properly(self):
         """
