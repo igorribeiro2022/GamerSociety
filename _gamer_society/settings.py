@@ -42,9 +42,6 @@ DJANGO_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "rest_framework",
-    "rest_framework.authtoken",
-    "users",
 ]
 
 THIRD_PARTY_APPS = [
@@ -52,7 +49,9 @@ THIRD_PARTY_APPS = [
     "rest_framework.authtoken",
 ]
 
-MY_APPS = []
+MY_APPS = [
+    "users",
+]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + MY_APPS
 
