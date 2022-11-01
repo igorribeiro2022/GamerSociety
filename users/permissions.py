@@ -2,11 +2,8 @@ from rest_framework import permissions
 from rest_framework.views import Request, View
 from users.models import User
         
-class IsStaffOrCreateOnly(permissions.BasePermission):
+class IsStaff(permissions.BasePermission):
     def has_permission(self, request: Request, view: View) -> bool:
-        
-        if request.method == "POST":
-            return True 
 
         return (
             request.user.is_authenticated
