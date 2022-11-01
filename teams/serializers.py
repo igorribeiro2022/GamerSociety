@@ -12,7 +12,7 @@ class TeamSerializer(ModelSerializer):
                 'read_only': True
             }
         }
-    users = UserSerializer(read_only=True, many=True)
+    users = []
     # championship = ChampionshipSerializer(read_only=True)
     owner = UserSerializer(read_only=True)
 
