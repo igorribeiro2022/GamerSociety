@@ -9,11 +9,13 @@ class UserSerializer(serializers.ModelSerializer):
     email = serializers.CharField(validators=[UniqueValidator(queryset=User.objects.all())])
     balance = serializers.FloatField(read_only=True)
     is_active = serializers.BooleanField(read_only=True)
+    is_staff = serializers.BooleanField(read_only=True)
     
 
     class Meta:
         model = User
         fields = [
+            "id",
             "username",
             "nickname",
             "password",
@@ -22,7 +24,33 @@ class UserSerializer(serializers.ModelSerializer):
             "email",
             "is_active",
             "is_player",
-            "team_id",
+            # "team_id",
+            "is_staff",
+        ]
+
+    
+class UserCreateSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(max_length=20, validators=[UniqueValidator(queryset=User.objects.all())])
+    password = serializers.CharField(write_only=True)
+    email = serializers.CharField(validators=[UniqueValidator(queryset=User.objects.all())])
+    balance = serializers.FloatField(read_only=True)
+    is_active = serializers.BooleanField(read_only=True)
+    is_staff = serializers.BooleanField()
+    
+
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "username",
+            "nickname",
+            "password",
+            "balance",
+            "birthday",
+            "email",
+            "is_active",
+            "is_player",
+            # "team_id",
             "is_staff",
         ]
 
@@ -34,13 +62,14 @@ class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
+            "id",
             "username",
             "nickname",
             "birthday",
             "email",
             "is_active",
             "is_player",
-            "team_id",
+            # "team_id",
             "is_staff",
         ]
 
@@ -49,20 +78,8 @@ class UserActivitySerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            "username",
-            "nickname",
-            "email",
+            "id",
             "is_active",
-            "is_player",
-            "team_id",
-            "is_staff",
         ]
-        read_only_fields = [
-            "username",
-            "nickname",
-            "email",
-            "is_player",
-            "team_id",
-            "is_staff",
-        ]
+
 
