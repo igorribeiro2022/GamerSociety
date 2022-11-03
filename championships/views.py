@@ -6,6 +6,7 @@ from .serializers import (
     CreateChampionshipsSerializer,
     ListChampionshipsSerializer,
     ChampionshipDetailSerializer,
+    RetrieveChampionShipWithGamesSerializer,
 )
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -21,7 +22,7 @@ class ListAllChampionshipsView(generics.ListAPIView):
 
 
 class ListOneChampionshipView(generics.RetrieveAPIView):
-    serializer_class = ListChampionshipsSerializer
+    serializer_class = RetrieveChampionShipWithGamesSerializer
     queryset = Championship.objects.all()
     lookup_url_kwarg = "cs_id"
 
@@ -34,7 +35,7 @@ class CreateChampionshipsView(generics.CreateAPIView):
     queryset = Championship.objects.all()
 
     def perform_create(self, serializer):
-        return serializer.save(staff_owner_id=self.request.user)
+        return serializer.save(staff_owner=self.request.user)
 
 
 class ChampionshipDetailView(generics.UpdateAPIView, generics.DestroyAPIView):
@@ -45,7 +46,7 @@ class ChampionshipDetailView(generics.UpdateAPIView, generics.DestroyAPIView):
     queryset = Championship.objects.all()
 
     def perform_create(self, serializer):
-        return serializer.save(staff_owner_id=self.request.user)
+        return serializer.save(staff_owner=self.request.user)
 
 
 class AddTeamsInChampionshipView(generics.CreateAPIView):
