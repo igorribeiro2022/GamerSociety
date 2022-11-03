@@ -16,7 +16,7 @@ class Championship(models.Model):
     entry_amount = models.FloatField()
     prize = models.FloatField()
 
-    staff_owner_id = models.ForeignKey(
+    staff_owner = models.ForeignKey(
         "users.User",
         on_delete=models.CASCADE,
         related_name="championships",
