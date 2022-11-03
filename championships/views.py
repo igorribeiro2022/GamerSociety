@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics
 from championships.models import Championship
-from championships.permissions import IsChampionshipOwner
+from championships.permissions import IsChampionshipOwner, IsAteamOwnerAndHaveFivePlayers
 from .serializers import (
     CreateChampionshipsSerializer,
     ListChampionshipsSerializer,
@@ -29,7 +29,7 @@ class ListOneChampionshipView(generics.RetrieveAPIView):
 
 class CreateChampionshipsView(generics.CreateAPIView):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsStaff, IsAuthenticatedOrReadOnly]
+    permission_classes = [IsStaff]
 
     serializer_class = CreateChampionshipsSerializer
     queryset = Championship.objects.all()
@@ -42,7 +42,7 @@ class ChampionshipDetailView(generics.UpdateAPIView, generics.DestroyAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsChampionshipOwner]
     serializer_class = ChampionshipDetailSerializer
-
+    lookup_url_kwarg = "cs_id"
     queryset = Championship.objects.all()
 
     def perform_create(self, serializer):
@@ -51,6 +51,6 @@ class ChampionshipDetailView(generics.UpdateAPIView, generics.DestroyAPIView):
 
 class AddTeamsInChampionshipView(generics.CreateAPIView):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsChampionshipOwner]
-
+    permission_classes = [IsAteamOwnerAndHaveFivePlayers]
+    lookup_url_kwarg = "cs_id", "team_id"
     serializer_class = ListChampionshipsSerializer
