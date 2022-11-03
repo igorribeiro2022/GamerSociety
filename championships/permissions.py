@@ -10,5 +10,5 @@ class IsChampionshipOwner(permissions.BasePermission):
 
         return (
             request.user.is_authenticated
-            and request.user == champs.staff_owner_id
+            and request.user == champs.staff_owner
         )

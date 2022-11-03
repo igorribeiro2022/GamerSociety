@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer
-
 from users.serializers import UserSerializer
 from .models import Team
+
 
 class TeamSerializer(ModelSerializer):
     class Meta:
