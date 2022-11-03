@@ -1,12 +1,10 @@
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from teams.models import Team
 from teams.serializers import TeamSerializer
 from users.models import User
-from users.serializers import UserSerializer
-from .permissions import IsStaff, isAuth
+from .permissions import IsStaff, isAuth, TeamPlayers
 from django.shortcuts import get_object_or_404
 
 class ListTeamsView(generics.ListCreateAPIView):
@@ -17,16 +15,11 @@ class ListTeamsView(generics.ListCreateAPIView):
     serializer_class = TeamSerializer
 
     def perform_create(self, serializer):
-        print()
-        print("="*50)
-        print(self.request.user)
-        print(self.request.user.is_team_owner)
-        self.request.user.is_team_owner = True
-        self.request.user.save()
-        print(self.request.user.is_team_owner)
-        print("="*50)
-        print()
-        serializer.save()
+        user_unique = User.objects.get(id=self.request.user.id)
+        user_unique.is_team_owner = True
+        user_unique.save()
+        users = User.objects.filter(id=self.request.user.id)
+        serializer.save(users=users)
 
 class RetrieveUpdateDeleteTeams(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [TokenAuthentication]
@@ -37,7 +30,7 @@ class RetrieveUpdateDeleteTeams(generics.RetrieveUpdateDestroyAPIView):
 
 class InsertUsersInTeams(generics.UpdateAPIView):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsStaff]
+    permission_classes = [IsStaff, TeamPlayers]
 
     queryset = Team.objects.all()
     serializer_class = TeamSerializer

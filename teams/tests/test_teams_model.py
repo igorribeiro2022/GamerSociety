@@ -31,10 +31,10 @@ class TeamTestClass(TestCase):
             'id': str,
             'name': 'Pain Gaming',
             'initials': 'PNG',
-            'e_sports': 'League of Legends',
-            'championship': 'Is not in a championship',
             'wins': 0,
-            'losses': 0
+            'losses': 0,
+            'e_sports': 'League of Legends',
+            'championship': 'Is not in a championship'
         }
         # cls.in_championship_team_created = {
         #     'id': str,
