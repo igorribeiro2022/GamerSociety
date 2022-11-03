@@ -12,7 +12,7 @@ urlpatterns = [
         views.CreateChampionshipsView.as_view(),
     ),  # create
     path(
-        "championships/<str:pk>/management/",
+        "championships/<str:cs_id>/management/",
         views.ChampionshipDetailView.as_view(),
     ),  # delete, winner patch
     path(
@@ -20,7 +20,7 @@ urlpatterns = [
         views.ListOneChampionshipView.as_view(),
     ),  # list one
     path(
-        "championships/<str:cs_id>/add-teams/",
+        "championships/<str:cs_id>/add-teams/<str:team_id>/",
         views.AddTeamsInChampionshipView.as_view(),
     ),  # nova view, serializers
 ]
