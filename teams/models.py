@@ -17,7 +17,6 @@ class Team(models.Model):
 
     championship = models.ManyToManyField(
         "championships.Championship",
-        on_delete=models.CASCADE,
         related_name="teams",
         null=True,
     )
