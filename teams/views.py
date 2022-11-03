@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from teams.models import Team
 from teams.serializers import TeamSerializer
 from users.models import User
+from users.serializers import UserSerializer
 from .permissions import IsStaff, isAuth
 from django.shortcuts import get_object_or_404
 
@@ -16,7 +17,16 @@ class ListTeamsView(generics.ListCreateAPIView):
     serializer_class = TeamSerializer
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        print()
+        print("="*50)
+        print(self.request.user)
+        print(self.request.user.is_team_owner)
+        self.request.user.is_team_owner = True
+        self.request.user.save()
+        print(self.request.user.is_team_owner)
+        print("="*50)
+        print()
+        serializer.save()
 
 class RetrieveUpdateDeleteTeams(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [TokenAuthentication]

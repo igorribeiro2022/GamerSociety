@@ -1,4 +1,5 @@
 from rest_framework import permissions
+from django.shortcuts import get_object_or_404
 
 class IsStaff(permissions.BasePermission):
     # def has_object_permission(self, request, view, obj):
@@ -10,8 +11,8 @@ class IsStaff(permissions.BasePermission):
         if request.method == 'GET':
             return True
         if request.method == 'PATCH' or 'DELETE':
-            if request.user == obj.owner:
-                return True
+            if request.user.is_team_owner == True:
+                return bool(request.user.team_id == obj.id)
             return bool(request.user.is_staff)
 
 class isAuth(permissions.BasePermission):

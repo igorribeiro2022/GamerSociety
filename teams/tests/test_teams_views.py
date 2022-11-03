@@ -74,9 +74,9 @@ class TeamViewTest(APITestCase):
         player = User.objects.create_user(**self.user_player)
         token_player = Token.objects.create(user=player)
 
-        team_created_by_staff = Team.objects.create(**self.team_model, owner=user)
+        team_created_by_staff = Team.objects.create(**self.team_model)
 
-        team_created_by_player = Team.objects.create(**self.team_model, owner=player)
+        team_created_by_player = Team.objects.create(**self.team_model)
 
         client.credentials(HTTP_AUTHORIZATION=f"Token {token_staff}")
         response = client.patch(f"/api/teams/{team_created_by_staff.id}/", self.team_model_updated)
@@ -93,8 +93,8 @@ class TeamViewTest(APITestCase):
 
         player = User.objects.create_user(**self.user_player)
 
-        team_created_by_staff = Team.objects.create(**self.team_model, owner=user)
-        team_created_by_player = Team.objects.create(**self.team_model, owner=player)
+        team_created_by_staff = Team.objects.create(**self.team_model)
+        team_created_by_player = Team.objects.create(**self.team_model)
 
         client.credentials(HTTP_AUTHORIZATION=f"Token {token_staff}")
         response_staff_can_delete_its_team_401 = client.delete(f"/api/teams/{team_created_by_staff.id}/")
@@ -112,8 +112,8 @@ class TeamViewTest(APITestCase):
 
         token_player = Token.objects.create(user=player)
 
-        team_created_by_player = Team.objects.create(**self.team_model, owner=player)
-        team_created_by_staff = Team.objects.create(**self.team_model, owner=user)
+        team_created_by_player = Team.objects.create(**self.team_model)
+        team_created_by_staff = Team.objects.create(**self.team_model)
 
         client.credentials(HTTP_AUTHORIZATION=f"Token {token_player}")
         response_player_204 = client.delete(f"/api/teams/{team_created_by_player.id}/")
@@ -130,9 +130,9 @@ class TeamViewTest(APITestCase):
 
         player = User.objects.create_user(**self.user_player)
 
-        team_created_by_staff = Team.objects.create(**self.team_model, owner=user)
+        team_created_by_staff = Team.objects.create(**self.team_model)
 
-        team_created_by_player = Team.objects.create(**self.team_model, owner=player)
+        team_created_by_player = Team.objects.create(**self.team_model)
 
         client.credentials(HTTP_AUTHORIZATION=f"Token {token_staff}")
         response_staff_200 = client.get(f"/api/teams/{team_created_by_player.id}/")
@@ -149,9 +149,9 @@ class TeamViewTest(APITestCase):
         player = User.objects.create_user(**self.user_player)
         token_player = Token.objects.create(user=player)
 
-        team_created_by_staff = Team.objects.create(**self.team_model, owner=user)
+        team_created_by_staff = Team.objects.create(**self.team_model)
 
-        team_created_by_player = Team.objects.create(**self.team_model, owner=player)
+        team_created_by_player = Team.objects.create(**self.team_model)
 
         client.credentials(HTTP_AUTHORIZATION=f"Token {token_player}")
         response_player_200 = client.get(f"/api/teams/{team_created_by_player.id}/")
@@ -168,7 +168,7 @@ class TeamViewTest(APITestCase):
         token_staff = Token.objects.create(user=user)
 
         client.credentials(HTTP_AUTHORIZATION=f"Token {token_staff}")
-        team_created_by_staff = Team.objects.create(**self.team_model, owner=user)
+        team_created_by_staff = Team.objects.create(**self.team_model)
 
         client.credentials(HTTP_AUTHORIZATION=f"Token {token_staff}")
         response = client.patch(f"/api/teams/add/{team_created_by_staff.id}/", data=self.team_users_insert)

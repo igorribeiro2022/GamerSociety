@@ -32,7 +32,9 @@ class TeamTestClass(TestCase):
             'name': 'Pain Gaming',
             'initials': 'PNG',
             'e_sports': 'League of Legends',
-            'championship': 'Is not in a championship'
+            'championship': 'Is not in a championship',
+            'wins': 0,
+            'losses': 0
         }
         # cls.in_championship_team_created = {
         #     'id': str,
@@ -44,7 +46,7 @@ class TeamTestClass(TestCase):
 
     def test_team_model(self):
 
-        team = Team.objects.create(**self.team_model, owner=self.user)
+        team = Team.objects.create(**self.team_model)
         self.assertTrue(bool(team.id))
         self.assertTrue(bool(team.name))
         self.assertTrue(bool(team.initials))
@@ -52,7 +54,7 @@ class TeamTestClass(TestCase):
     
     def test_team_instances(self):
 
-        team = Team.objects.create(**self.team_model, owner=self.user)
+        team = Team.objects.create(**self.team_model)
         # team_in_champ = Team.objects.create(self.team_in_champ_model)
         self.assertIsInstance(team, Team)
         # self.assertIsInstance(team_in_champ, Team)

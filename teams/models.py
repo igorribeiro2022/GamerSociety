@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from utils.e_sports_choices import ESportChoices
 import uuid
