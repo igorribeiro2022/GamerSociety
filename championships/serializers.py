@@ -5,7 +5,6 @@ from .models import Championship
 
 
 class CreateChampionshipsSerializer(serializers.ModelSerializer):
-    staff_owner_id = UserSerializer(read_only=True)
     # games = GameSerializer(read_only=True, many=True)
 
     class Meta:
@@ -17,18 +16,21 @@ class CreateChampionshipsSerializer(serializers.ModelSerializer):
             "e_sport",
             "winner",
             "staff_owner_id",
-            # "teams",
+            "entry_amount",
+            "prize",
+            "teams",
             # "games",
-            # "teams_results",
         ]
 
         read_only_fields = [
             "id",
+            "staff_owner_id",
+            "teams",
             # "games",
-            # "teams_results",
         ]
 
     def create(self, validated_data):
+        # criar os 11 games
         return Championship.objects.create(**validated_data)
 
 
@@ -44,13 +46,13 @@ class ListChampionshipsSerializer(serializers.ModelSerializer):
             "staff_owner_id",
             # "teams",
             # "games",
-            # "teams_results",
         ]
 
 
 class ChampionshipDetailSerializer(serializers.ModelSerializer):
+    # games = GamesSerializers(many=True)
 
     class Meta:
         model = Championship
         fields = "__all__"
-        read_only_fields = ["id", "winner", "teams_results"]
+        read_only_fields = ["id"]

@@ -19,12 +19,12 @@ class Team(models.Model):
         choices=ESportChoices.choices,
         default=ESportChoices.DEFAULT,
     )
-    # championship = models.ForeignKey(
-    #     'championships.Championship',
-    #     on_delete=models.CASCADE,
-    #     related_name='team',
-    #     null=True
-    # )
+    championship = models.ForeignKey(
+        'championships.Championship',
+        on_delete=models.CASCADE,
+        related_name='teams',
+        null=True
+    )
     owner = models.ForeignKey(
         "users.User",
         on_delete=models.CASCADE,

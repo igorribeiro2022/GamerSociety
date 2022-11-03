@@ -8,8 +8,11 @@ class Championship(models.Model):
     initial_date = models.DateField()
     e_sport = models.CharField(max_length=50)
     winner = models.CharField(max_length=50, blank=True, null=True)
-    entry_amount = models.CharField(max_length=50)
-    prize = models.CharField(max_length=50)
-    staff_owner_id = models.CharField(max_length=50)
+    entry_amount = models.FloatField()
+    prize = models.FloatField()
 
-    # games = GameSerializer()
+    staff_owner_id = models.ForeignKey(
+        "users.User",
+        on_delete=models.CASCADE,
+        related_name="championships",
+    )
