@@ -7,7 +7,7 @@ class GamesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
         fields = "__all__"
-        
+ 
 class GamesLowKeysSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
@@ -16,4 +16,4 @@ class GamesLowKeysSerializer(serializers.ModelSerializer):
             "phase"
         ]
 
-    
+

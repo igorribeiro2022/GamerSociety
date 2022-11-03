@@ -1,12 +1,15 @@
 from rest_framework import serializers
 from games.models import Game
+from teams.serializers import TeamSerializer
 from .models import Championship
 from utils.game_name_phase import Names, Phase, games_list
 from games.serializers import GamesSerializer, GamesLowKeysSerializer
 
 
 class CreateChampionshipsSerializer(serializers.ModelSerializer):
+
     games = GamesLowKeysSerializer(read_only=True, many=True)
+
 
     class Meta:
         model = Championship
@@ -57,9 +60,19 @@ class ListChampionshipsSerializer(serializers.ModelSerializer):
 
 
 class ChampionshipDetailSerializer(serializers.ModelSerializer):
-    # games = GamesSerializers(many=True)
 
     class Meta:
         model = Championship
         fields = "__all__"
         read_only_fields = ["id"]
+
+
+class RetrieveChampionShipWithGamesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Championship
+        fields = "__all__"
+        read_only_fields = ["id"]
+
+    games = GamesSerializer(many=True)
+    teams = TeamSerializer(many=True)

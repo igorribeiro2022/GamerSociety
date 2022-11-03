@@ -6,6 +6,7 @@ from .serializers import (
     CreateChampionshipsSerializer,
     ListChampionshipsSerializer,
     ChampionshipDetailSerializer,
+    RetrieveChampionShipWithGamesSerializer,
 )
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -21,7 +22,7 @@ class ListAllChampionshipsView(generics.ListAPIView):
 
 
 class ListOneChampionshipView(generics.RetrieveAPIView):
-    serializer_class = ListChampionshipsSerializer
+    serializer_class = RetrieveChampionShipWithGamesSerializer
     queryset = Championship.objects.all()
     lookup_url_kwarg = "cs_id"
 

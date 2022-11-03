@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from utils.e_sports_choices import ESportChoices
 import uuid
@@ -17,6 +18,5 @@ class Team(models.Model):
 
     championship = models.ManyToManyField(
         "championships.Championship",
-        related_name="teams",
-        null=True,
+        related_name="teams"
     )
