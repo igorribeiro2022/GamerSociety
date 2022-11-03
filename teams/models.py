@@ -1,13 +1,6 @@
 from django.db import models
+from utils.e_sports_choices import ESportChoices
 import uuid
-
-
-class ESportChoices(models.TextChoices):
-    LEAGUEOFLEGENDS = "League of Legends"
-    OVERWATCH = "Overwatch"
-    COUNTERSTRIKE = "Counter Strike"
-    VALORANT = "Valorant"
-    DEFAULT = "Is not in a championship"
 
 
 class Team(models.Model):
