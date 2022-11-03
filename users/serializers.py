@@ -27,8 +27,9 @@ class UserSerializer(serializers.ModelSerializer):
             "email",
             "is_active",
             "is_player",
-            # "team_id",
+            "team_id",
             "is_staff",
+            "is_team_owner",
         ]
 
 
@@ -75,10 +76,17 @@ class UserListSerializer(serializers.ModelSerializer):
             "email",
             "is_active",
             "is_player",
-            # "team_id",
+            # "team",
             "is_staff",
         ]
 
+class UserForTeamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "nickname"
+        ]
 
 class UserActivitySerializer(serializers.ModelSerializer):
     class Meta:

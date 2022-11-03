@@ -1,65 +1,10 @@
-from django.test import TestCase
-from rest_framework.test import APITestCase, APIClient
+from rest_framework.test import APITestCase
 from users.models import User
 from ..models import Team
 from rest_framework.authtoken.models import Token
+from rest_framework.test import APIClient
 
 client = APIClient()
-
-class TeamTestClass(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-
-        cls.user_staff = {
-            "username": "Gustavo",
-            "nickname": "Buiu",
-            "password": "1234",
-            "birthday": "2000-05-22",
-            "email": "gustavo@email.com",
-            "is_player": False,
-            "is_staff": True,
-        }
-        cls.user = User.objects.create_user(**cls.user_staff)
-
-        cls.team_model = {
-            'name': 'Pain Gaming',
-            'initials': 'PNG',
-            'e_sports': 'League of Legends'
-        }
-        # cls.team_in_champ_model = {
-        #     'name': 'Pain Gaming',
-        #     'initials': 'PNG',
-        #     'e_sports': 'League of Legends'
-        # }
-        cls.not_in_championship_team_created = {
-            'id': str,
-            'name': 'Pain Gaming',
-            'initials': 'PNG',
-            'e_sports': 'League of Legends',
-            'championship': 'Is not in a championship'
-        }
-        # cls.in_championship_team_created = {
-        #     'id': str,
-        #     'name': 'Pain Gaming',
-        #     'initials': 'PNG',
-        #     'e_sports': 'League of Legends',
-        #     'championship': 
-        # }
-
-    def test_team_model(self):
-
-        team = Team.objects.create(**self.team_model, owner=self.user)
-        self.assertTrue(bool(team.id))
-        self.assertTrue(bool(team.name))
-        self.assertTrue(bool(team.initials))
-        self.assertTrue(bool(team.e_sports))
-    
-    def test_team_instances(self):
-
-        team = Team.objects.create(**self.team_model, owner=self.user)
-        # team_in_champ = Team.objects.create(self.team_in_champ_model)
-        self.assertIsInstance(team, Team)
-        # self.assertIsInstance(team_in_champ, Team)
 
 class TeamViewTest(APITestCase):
     @classmethod
@@ -94,6 +39,10 @@ class TeamViewTest(APITestCase):
             'e_sports': 'Valorant'
         }
 
+        cls.team_users_insert = {
+            'username': 'João'
+        }
+
     def test_tokens(self):
 
         user = User.objects.create_user(**self.user_staff)
@@ -125,9 +74,9 @@ class TeamViewTest(APITestCase):
         player = User.objects.create_user(**self.user_player)
         token_player = Token.objects.create(user=player)
 
-        team_created_by_staff = Team.objects.create(**self.team_model, owner=user)
+        team_created_by_staff = Team.objects.create(**self.team_model)
 
-        team_created_by_player = Team.objects.create(**self.team_model, owner=player)
+        team_created_by_player = Team.objects.create(**self.team_model)
 
         client.credentials(HTTP_AUTHORIZATION=f"Token {token_staff}")
         response = client.patch(f"/api/teams/{team_created_by_staff.id}/", self.team_model_updated)
@@ -144,8 +93,8 @@ class TeamViewTest(APITestCase):
 
         player = User.objects.create_user(**self.user_player)
 
-        team_created_by_staff = Team.objects.create(**self.team_model, owner=user)
-        team_created_by_player = Team.objects.create(**self.team_model, owner=player)
+        team_created_by_staff = Team.objects.create(**self.team_model)
+        team_created_by_player = Team.objects.create(**self.team_model)
 
         client.credentials(HTTP_AUTHORIZATION=f"Token {token_staff}")
         response_staff_can_delete_its_team_401 = client.delete(f"/api/teams/{team_created_by_staff.id}/")
@@ -163,8 +112,8 @@ class TeamViewTest(APITestCase):
 
         token_player = Token.objects.create(user=player)
 
-        team_created_by_player = Team.objects.create(**self.team_model, owner=player)
-        team_created_by_staff = Team.objects.create(**self.team_model, owner=user)
+        team_created_by_player = Team.objects.create(**self.team_model)
+        team_created_by_staff = Team.objects.create(**self.team_model)
 
         client.credentials(HTTP_AUTHORIZATION=f"Token {token_player}")
         response_player_204 = client.delete(f"/api/teams/{team_created_by_player.id}/")
@@ -181,9 +130,9 @@ class TeamViewTest(APITestCase):
 
         player = User.objects.create_user(**self.user_player)
 
-        team_created_by_staff = Team.objects.create(**self.team_model, owner=user)
+        team_created_by_staff = Team.objects.create(**self.team_model)
 
-        team_created_by_player = Team.objects.create(**self.team_model, owner=player)
+        team_created_by_player = Team.objects.create(**self.team_model)
 
         client.credentials(HTTP_AUTHORIZATION=f"Token {token_staff}")
         response_staff_200 = client.get(f"/api/teams/{team_created_by_player.id}/")
@@ -200,9 +149,9 @@ class TeamViewTest(APITestCase):
         player = User.objects.create_user(**self.user_player)
         token_player = Token.objects.create(user=player)
 
-        team_created_by_staff = Team.objects.create(**self.team_model, owner=user)
+        team_created_by_staff = Team.objects.create(**self.team_model)
 
-        team_created_by_player = Team.objects.create(**self.team_model, owner=player)
+        team_created_by_player = Team.objects.create(**self.team_model)
 
         client.credentials(HTTP_AUTHORIZATION=f"Token {token_player}")
         response_player_200 = client.get(f"/api/teams/{team_created_by_player.id}/")
@@ -213,4 +162,19 @@ class TeamViewTest(APITestCase):
         self.assertEqual(200, response_player_200.status_code)
         self.assertEqual(200, response_player_staff_team_200.status_code)
 
-    
+    def test_update_teams_members(self):
+        user = User.objects.create_user(**self.user_staff)
+        player = User.objects.create_user(**self.user_player)
+        token_staff = Token.objects.create(user=user)
+
+        client.credentials(HTTP_AUTHORIZATION=f"Token {token_staff}")
+        team_created_by_staff = Team.objects.create(**self.team_model)
+
+        client.credentials(HTTP_AUTHORIZATION=f"Token {token_staff}")
+        response = client.patch(f"/api/teams/add/{team_created_by_staff.id}/", data=self.team_users_insert)
+
+        print()
+        print("="*50)
+        print(response)
+        print("="*50)
+        print()
