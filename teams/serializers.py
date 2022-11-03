@@ -10,6 +10,17 @@ class TeamSerializer(ModelSerializer):
         read_only_fields = ['championship']
     # championship = ListChampionshipsSerializer(read_only=True, allow_null=True)
     users = UserForTeamSerializer(many=True, allow_null=True, read_only=True)
+    
+class TeamSerializerReturn(ModelSerializer):
+    class Meta:
+        model = Team
+        fields = [
+            'name',
+            'initials'
+        ]
+
+    # championship = ListChampionshipsSerializer(read_only=True, allow_null=True)
+    # users = UserForTeamSerializer(many=True, allow_null=True, read_only=True)
 
 # class TeamListSerializer(ModelSerializer):
 #     class Meta:
