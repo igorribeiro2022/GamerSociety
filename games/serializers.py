@@ -22,8 +22,8 @@ class GameUpdateSerializer(serializers.ModelSerializer):
         model = Game
         fields = [
             "id",
-            "team_1_id",
-            "team_2_id",
+            "team_1",
+            "team_2",
             # "initial_date"
         ]
         read_only_fields = ["id"]
@@ -46,8 +46,8 @@ class GamesToBetSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "phase"
-            "team_1_id",
-            "team_2_id",
+            "team_1",
+            "team_2",
             "initial_date",
 
         ]
@@ -55,7 +55,7 @@ class GamesToBetSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "phase"
-            "team_1_id",
-            "team_2_id",
+            "team_1",
+            "team_2",
             "initial_date",
         ]

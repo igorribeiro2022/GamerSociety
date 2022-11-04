@@ -12,7 +12,7 @@ import datetime
 
 
 class ListBettableGamesView(generics.ListAPIView):
-    queryset = Game.objects.exclude(team_1_id=None, team_2_id=None).filter(winner_id=None)
+    queryset = Game.objects.exclude(team_1=None, team_2=None).filter(winner=None)
     serializer_class = GamesToBetSerializer
     
 
