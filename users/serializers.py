@@ -15,6 +15,8 @@ class UserSerializer(serializers.ModelSerializer):
     is_active = serializers.BooleanField(read_only=True)
     is_staff = serializers.BooleanField(read_only=True)
 
+    balance = serializers.SerializerMethodField()
+
     class Meta:
         model = User
         fields = [
@@ -31,7 +33,12 @@ class UserSerializer(serializers.ModelSerializer):
             "is_team_owner",
             "is_superuser",
             "date_joined",
+            "balance",
         ]
+        read_only_fields = ["balance"]
+
+    def get_balance(self, user: User):
+        return user.history.balance
 
 
 class UserCreateSerializer(UserSerializer):
