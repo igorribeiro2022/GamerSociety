@@ -17,7 +17,7 @@ from .serializers import (
 )
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from users.permissions import IsStaff
+from utils.permissions import IsStaff
 from teams.models import Team
 from rest_framework import views
 

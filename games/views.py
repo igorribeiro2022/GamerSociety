@@ -1,7 +1,7 @@
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
 
-from users.permissions import IsStaff
+from utils.permissions import IsStaff
 from utils.mixins import SerializerByMethodMixin
 
 from .models import Game
@@ -13,14 +13,15 @@ class ListGamesView(generics.ListAPIView):
     serializer_class = GamesSerializer
 
 
-class RetrieveUpdateDeleteGameView(SerializerByMethodMixin, generics.RetrieveUpdateDestroyAPIView):
+class RetrieveUpdateDeleteGameView(
+    SerializerByMethodMixin, generics.RetrieveUpdateDestroyAPIView
+):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsStaff]
-    
+
     queryset = Game.objects
     serializer_map = {
         "GET": GamesSerializer,
         "PATCH": GameUpdateSerializer,
-        "DELETE": GamesSerializer
+        "DELETE": GamesSerializer,
     }
-    
