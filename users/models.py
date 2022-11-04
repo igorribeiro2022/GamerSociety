@@ -7,7 +7,6 @@ class User(AbstractUser):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
     username = models.CharField(max_length=20, unique=True)
     nickname = models.CharField(max_length=20)
-    balance = models.FloatField(blank=True, default=0.00)
     email = models.EmailField(max_length=127, unique=True)
     birthday = models.DateField()
     is_player = models.BooleanField(blank=True, default=False, null=True)
