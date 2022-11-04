@@ -17,7 +17,6 @@ class GamesLowKeysSerializer(serializers.ModelSerializer):
         ]
 
 
-
 class GameUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
