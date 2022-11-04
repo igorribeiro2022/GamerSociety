@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from utils.game_name_phase import Names, Phase
+from bets.models import Bet
 
 
 class Game(models.Model):
@@ -19,4 +20,10 @@ class Game(models.Model):
         "championships.Championship",
         on_delete=models.CASCADE,
         related_name="games",
+    )
+
+    bet = models.OneToOneField(
+        Bet,
+        on_delete=models.CASCADE,
+        primary_key=True,
     )
