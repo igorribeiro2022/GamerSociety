@@ -53,7 +53,8 @@ MY_APPS = [
     "users",
     "games",
     "championships",
-    "teams"
+    "teams",
+    "bets"
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + MY_APPS
