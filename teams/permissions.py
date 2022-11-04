@@ -10,6 +10,7 @@ class IsStaff(permissions.BasePermission):
     #     return bool(request.user.is_authenticated)
 
     def has_object_permission(self, request, view, obj):
+        self.message = "You're not team's owner"
         if request.method == "GET":
             return True
         if request.method == "PATCH" or "DELETE":
@@ -17,15 +18,9 @@ class IsStaff(permissions.BasePermission):
                 return bool(request.user.team_id == obj.id)
             return bool(request.user.is_staff)
 
-
-class TeamPlayers(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        if request.method == "PATCH":
-            return bool(obj.users.count() <= 6)
-
-
 class isAuth(permissions.BasePermission):
     def has_permission(self, request, view):
+        self.message = "You're not authenticated"
         if request.method == "GET":
             return True
         return bool(request.user.is_authenticated)
@@ -33,15 +28,15 @@ class isAuth(permissions.BasePermission):
 
 class AlreadyHaveATeam(permissions.BasePermission):
     def has_permission(self, request, view):
-
+        self.message = "You already have a team"
         if request.user.team_id != None:
             return False
-
         return True
 
 
 class PlayerToBeAddedAlreadyHasATeam(permissions.BasePermission):
     def has_permission(self, request, view):
+        self.message = "Some player that you're tryng to add already has a team"
         for key, value in request.data.items():
             user = User.objects.get(username=value)
             if user.team_id != None:
@@ -50,6 +45,7 @@ class PlayerToBeAddedAlreadyHasATeam(permissions.BasePermission):
     
 class CanReallyAddThisUsersInTeam(permissions.BasePermission):
     def has_object_permission(self, request, view, team: Team):
+        self.message = "You can't add more than 6 players on team"
         players_on_team = team.users.count()
         players_to_add_team = 0
         for key, value in request.data.items():
