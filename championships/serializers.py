@@ -52,7 +52,19 @@ class ListChampionshipsSerializer(serializers.ModelSerializer):
             "winner",
             "staff_owner",
             "teams",
+            "games",
+            "teams",
         ]
+        read_only_fields = [
+            "id",
+            "name",
+            "initial_date",
+            "e_sport",
+            "winner",
+            "staff_owner",
+            "teams",
+        ]
+
         read_only_fields = [
             "id",
             "name",

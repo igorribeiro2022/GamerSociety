@@ -28,11 +28,13 @@ class TeamViewTest(APITestCase):
             "is_player": True,
             "is_staff": False,
         }
+        
         cls.team_model = {
             'name': 'Pain Gaming',
             'initials': 'PNG',
             'e_sports': 'League of Legends'
         }
+
         cls.team_model_updated = {
             'name': 'Pain',
             'initials': 'PNG',
