@@ -1,7 +1,7 @@
 from rest_framework import permissions
 from users.models import User
-import ipdb
 from teams.models import Team
+
 
 class IsStaff(permissions.BasePermission):
     # def has_object_permission(self, request, view, obj):
@@ -42,7 +42,8 @@ class PlayerToBeAddedAlreadyHasATeam(permissions.BasePermission):
             if user.team_id != None:
                 return False
         return True
-    
+
+
 class CanReallyAddThisUsersInTeam(permissions.BasePermission):
     def has_object_permission(self, request, view, team: Team):
         self.message = "You can't add more than 6 players on team"
@@ -50,5 +51,5 @@ class CanReallyAddThisUsersInTeam(permissions.BasePermission):
         players_to_add_team = 0
         for key, value in request.data.items():
             players_on_team += 1
-            
+
         return players_on_team + players_to_add_team <= 6

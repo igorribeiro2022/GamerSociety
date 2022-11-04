@@ -5,7 +5,7 @@ from .permissions import UserIsHistoryOwner
 from rest_framework.permissions import IsAuthenticated
 from .models import Transaction
 from historys.models import History
-import ipdb
+
 
 class CreateTransaction(generics.CreateAPIView):
     authentication_classes = [TokenAuthentication]
@@ -13,10 +13,9 @@ class CreateTransaction(generics.CreateAPIView):
     serializer_class = TransactionSerializer
     # lookup_url_kwarg = "his_id"
     queryset = Transaction.objects.all()
-    
-    def perform_create(self, serializer):
- 
-        serializer.save(user=self.request.user)
-        
-        return serializer.data
 
+    def perform_create(self, serializer):
+
+        serializer.save(user=self.request.user)
+
+        return serializer.data
