@@ -1,5 +1,6 @@
 from rest_framework import permissions
-
+from users.models import User
+import ipdb
 class IsStaff(permissions.BasePermission):
     # def has_object_permission(self, request, view, obj):
     #     if request.method == 'PATCH' or 'DELETE':
@@ -25,3 +26,20 @@ class isAuth(permissions.BasePermission):
         if request.method == 'GET':
             return True
         return bool(request.user.is_authenticated)
+    
+class AlreadyHaveATeam(permissions.BasePermission):
+    def has_permission(self, request, view):
+        
+        if request.user.team_id != None:
+            return False
+        
+        return True
+    
+class PlayerToBeAddedAlreadyHasATeam(permissions.BasePermission):
+    def has_permission(self, request, view):
+        for key, value in request.data.items():
+            user = User.objects.get(username=value)
+            ipdb.set_trace()
+            if user.team_id != None:
+                return False
+        return True

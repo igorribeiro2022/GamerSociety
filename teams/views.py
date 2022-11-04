@@ -4,13 +4,16 @@ from rest_framework.authentication import TokenAuthentication
 from teams.models import Team
 from teams.serializers import TeamSerializer
 from users.models import User
-from .permissions import IsStaff, isAuth, TeamPlayers
+from .permissions import IsStaff, isAuth, TeamPlayers, AlreadyHaveATeam, PlayerToBeAddedAlreadyHasATeam
 from django.shortcuts import get_object_or_404
 
-class ListTeamsView(generics.ListCreateAPIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [isAuth]
+class ListTeamsView(generics.ListAPIView):
+    queryset = Team.objects.all()
+    serializer_class = TeamSerializer
 
+class CreateTeamsView(generics.CreateAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [isAuth, AlreadyHaveATeam]
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
 
@@ -30,7 +33,7 @@ class RetrieveUpdateDeleteTeams(generics.RetrieveUpdateDestroyAPIView):
 
 class InsertUsersInTeams(generics.UpdateAPIView):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsStaff, TeamPlayers]
+    permission_classes = [IsStaff, TeamPlayers, PlayerToBeAddedAlreadyHasATeam]
 
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
