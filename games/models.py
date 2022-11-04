@@ -1,7 +1,6 @@
 import uuid
 from django.db import models
 from utils.game_name_phase import Names, Phase
-from bets.models import Bet
 
 
 class Game(models.Model):
