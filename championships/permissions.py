@@ -61,3 +61,16 @@ class HasAnotherChampAroundSevenDays(permissions.BasePermission):
     def has_object_permission(self, request: Request, view: View, team: Team) -> bool:
         if team.championship.count() == 0:
             return True
+
+
+class IsChampOwnerTryngToEnterInIt(permissions.BasePermission):
+    def has_object_permission(self, request: Request, view: View, team: Team) -> bool:
+        cs_id = view.kwargs["cs_id"]
+        champ = Championship.objects.get(id=cs_id)
+        champ_owner_id = champ.staff_owner.id
+        
+        for user in team.users.all():
+            if user.id == champ_owner_id:
+                return False
+        
+        return True

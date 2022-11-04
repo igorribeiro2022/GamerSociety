@@ -20,5 +20,42 @@ class GamesLowKeysSerializer(serializers.ModelSerializer):
 class GameUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
-        fields = "__all__"
-        read_only_fields = ["id", "name"]
+        fields = [
+            "id",
+            "team_1_id",
+            "team_2_id",
+            # "initial_date"
+        ]
+        read_only_fields = ["id"]
+        
+class GameWinnerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Game
+        fields = [
+            "id",
+            "winner_id"
+            "result_team_1",
+            "result_team_2"
+        ]
+        read_only_fields = ["id"]
+        
+class GamesToBetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Game
+        fields = [
+            "id",
+            "name",
+            "phase"
+            "team_1_id",
+            "team_2_id",
+            "initial_date",
+
+        ]
+        read_only_fields = [
+            "id",
+            "name",
+            "phase"
+            "team_1_id",
+            "team_2_id",
+            "initial_date",
+        ]
