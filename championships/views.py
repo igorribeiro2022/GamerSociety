@@ -1,16 +1,25 @@
 from django.shortcuts import render
 from rest_framework import generics
-from championships.models import Championship
-from championships.permissions import IsChampionshipOwner, IsAteamOwnerAndHaveFivePlayers
+from .models import Championship
+from .permissions import (
+    IsChampionshipOwner,
+    IsATeamOwner,
+    HaveFivePlayers,
+    IsTeamEsportCorrectly,
+    IsChampionshipFull,
+)
 from .serializers import (
     CreateChampionshipsSerializer,
     ListChampionshipsSerializer,
     ChampionshipDetailSerializer,
     RetrieveChampionShipWithGamesSerializer,
+    RetrieveChampionAddingGamesSerializer,
 )
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from users.permissions import IsStaff
+from teams.models import Team
+from rest_framework import views
 
 
 class ListAllChampionshipsView(generics.ListAPIView):
@@ -49,8 +58,29 @@ class ChampionshipDetailView(generics.UpdateAPIView, generics.DestroyAPIView):
         return serializer.save(staff_owner=self.request.user)
 
 
-class AddTeamsInChampionshipView(generics.CreateAPIView):
+class AddTeamsInChampionshipView(generics.UpdateAPIView):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAteamOwnerAndHaveFivePlayers]
-    lookup_url_kwarg = "cs_id", "team_id"
+    permission_classes = [
+        IsAuthenticated,
+        IsATeamOwner,
+        IsATeamOwner,
+        HaveFivePlayers,
+        IsTeamEsportCorrectly,
+        IsChampionshipFull,
+    ]
+    queryset = Team.objects.all()
+    lookup_url_kwarg = "team_id"
     serializer_class = ListChampionshipsSerializer
+
+    def patch(self, request, *args, **kwargs):
+        self.partial_update(request, *args, **kwargs)
+        cs_id = kwargs["cs_id"]
+        champ_updated = Championship.objects.get(id=cs_id)
+        cham_serializer = RetrieveChampionAddingGamesSerializer(champ_updated)
+        # ipdb.set_trace()
+
+        return_dict = {
+            "detail": "Team has been added",
+            "teams_in_championship": cham_serializer.data["teams"],
+        }
+        return views.Response(return_dict)
