@@ -9,7 +9,7 @@ class Game(models.Model):
     phase = models.CharField(
         max_length=20, choices=Phase.choices, default=Phase.DEFAULT
     )
-    winner = models.CharField(max_length=20, default=None, null=True)
+    winner = models.CharField(max_length=120, default=None, null=True)
     result_team_1 = models.IntegerField(blank=True, null=True, default=None)
     result_team_2 = models.IntegerField(blank=True, null=True, default=None)
     team_1 = models.CharField(max_length=120, blank=True, null=True, default=None)
