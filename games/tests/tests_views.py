@@ -50,6 +50,8 @@ class GamesViewTest(TestCase):
             "name": "Imperial",
             "initials": "IMP",
             "e_sports": "Counter Strike",
+            "wins": 0,
+            "losses": 0,
         }
 
         cls.user_staff = User.objects.create_user(**cls.user_staff_data)
@@ -58,7 +60,9 @@ class GamesViewTest(TestCase):
             **cls.championship_data, staff_owner=cls.user_staff
         )
         cls.team = Team.objects.create(**cls.team_data)
-        cls.game = Game.objects.get_or_create(**cls.game_data)[0]
+        cls.game = Game.objects.get_or_create(
+            **cls.game_data, championship=cls.championship
+        )[0]
 
     def test_edit_game_staff(self):
         token_staff = Token.objects.create(user=self.user_staff)
