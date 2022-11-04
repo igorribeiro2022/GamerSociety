@@ -21,9 +21,3 @@ class Game(models.Model):
         on_delete=models.CASCADE,
         related_name="games",
     )
-
-    bet = models.OneToOneField(
-        Bet,
-        on_delete=models.CASCADE,
-        primary_key=True,
-    )
