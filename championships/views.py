@@ -1,7 +1,10 @@
 from django.shortcuts import render
 from rest_framework import generics
 from championships.models import Championship
-from championships.permissions import IsChampionshipOwner, IsAteamOwnerAndHaveFivePlayers
+from championships.permissions import (
+    IsChampionshipOwner,
+    IsAteamOwnerAndHaveFivePlayers,
+)
 from .serializers import (
     CreateChampionshipsSerializer,
     ListChampionshipsSerializer,
@@ -14,7 +17,6 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from users.permissions import IsStaff
 from teams.models import Team
 from rest_framework import views
-import ipdb
 
 
 class ListAllChampionshipsView(generics.ListAPIView):
@@ -59,18 +61,16 @@ class AddTeamsInChampionshipView(generics.UpdateAPIView):
     queryset = Team.objects.all()
     lookup_url_kwarg = "team_id"
     serializer_class = ListChampionshipsSerializer
-    
+
     def patch(self, request, *args, **kwargs):
         self.partial_update(request, *args, **kwargs)
-        cs_id = kwargs['cs_id']
+        cs_id = kwargs["cs_id"]
         champ_updated = Championship.objects.get(id=cs_id)
         cham_serializer = RetrieveChampionAddingGamesSerializer(champ_updated)
         # ipdb.set_trace()
-        
+
         return_dict = {
             "detail": "Team has been added",
-            "teams_in_championship": cham_serializer.data['teams']
+            "teams_in_championship": cham_serializer.data["teams"],
         }
         return views.Response(return_dict)
-    
-    
