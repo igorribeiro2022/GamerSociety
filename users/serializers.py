@@ -27,39 +27,14 @@ class UserSerializer(serializers.ModelSerializer):
             "email",
             "is_active",
             "is_player",
-            "team_id",
+            "team",
             "is_staff",
             "is_team_owner",
         ]
 
 
-class UserCreateSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(
-        max_length=20, validators=[UniqueValidator(queryset=User.objects.all())]
-    )
-    password = serializers.CharField(write_only=True)
-    email = serializers.CharField(
-        validators=[UniqueValidator(queryset=User.objects.all())]
-    )
-    balance = serializers.FloatField(read_only=True)
-    is_active = serializers.BooleanField(read_only=True)
+class UserCreateSerializer(UserSerializer):
     is_staff = serializers.BooleanField()
-
-    class Meta:
-        model = User
-        fields = [
-            "id",
-            "username",
-            "nickname",
-            "password",
-            "balance",
-            "birthday",
-            "email",
-            "is_active",
-            "is_player",
-            # "team_id",
-            "is_staff",
-        ]
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
@@ -76,17 +51,16 @@ class UserListSerializer(serializers.ModelSerializer):
             "email",
             "is_active",
             "is_player",
-            # "team",
+            "team",
             "is_staff",
         ]
+
 
 class UserForTeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = [
-            "id",
-            "nickname"
-        ]
+        fields = ["id", "nickname"]
+
 
 class UserActivitySerializer(serializers.ModelSerializer):
     class Meta:
