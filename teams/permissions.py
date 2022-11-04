@@ -39,7 +39,6 @@ class PlayerToBeAddedAlreadyHasATeam(permissions.BasePermission):
     def has_permission(self, request, view):
         for key, value in request.data.items():
             user = User.objects.get(username=value)
-            ipdb.set_trace()
             if user.team_id != None:
                 return False
         return True
