@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from rest_framework import generics
-from championships.models import Championship
-from championships.permissions import (
+from .models import Championship
+from .permissions import (
     IsChampionshipOwner,
-    IsAteamOwnerAndHaveFivePlayers,
+    IsATeamOwner,
+    HaveFivePlayers,
+    IsTeamEsportCorrectly,
+    IsChampionshipFull,
 )
 from .serializers import (
     CreateChampionshipsSerializer,
@@ -57,7 +60,14 @@ class ChampionshipDetailView(generics.UpdateAPIView, generics.DestroyAPIView):
 
 class AddTeamsInChampionshipView(generics.UpdateAPIView):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated, IsAteamOwnerAndHaveFivePlayers]
+    permission_classes = [
+        IsAuthenticated,
+        IsATeamOwner,
+        IsATeamOwner,
+        HaveFivePlayers,
+        IsTeamEsportCorrectly,
+        IsChampionshipFull,
+    ]
     queryset = Team.objects.all()
     lookup_url_kwarg = "team_id"
     serializer_class = ListChampionshipsSerializer
