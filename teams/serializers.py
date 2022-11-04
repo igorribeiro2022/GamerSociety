@@ -1,38 +1,37 @@
 from rest_framework.serializers import ModelSerializer
 from users.serializers import UserForTeamSerializer
 from .models import Team
-import ipdb
 
 
 class TeamSerializer(ModelSerializer):
     class Meta:
         model = Team
-        fields = '__all__'
-        read_only_fields = ['championship']
+        fields = "__all__"
+        read_only_fields = ["championship"]
+
     # championship = ListChampionshipsSerializer(read_only=True, allow_null=True)
     users = UserForTeamSerializer(many=True, allow_null=True, read_only=True)
-    
+
     def update(self, instance, validated_data):
-        users_list = validated_data['users']
-        
+        users_list = validated_data["users"]
+
         # ipdb.set_trace()
 
         for user in users_list:
             instance.users.add(user)
-            
+
         instance.save()
         return instance
-    
+
+
 class TeamSerializerReturn(ModelSerializer):
     class Meta:
         model = Team
-        fields = [
-            'name',
-            'initials'
-        ]
+        fields = ["name", "initials"]
 
     # championship = ListChampionshipsSerializer(read_only=True, allow_null=True)
     # users = UserForTeamSerializer(many=True, allow_null=True, read_only=True)
+
 
 # class TeamListSerializer(ModelSerializer):
 #     class Meta:
