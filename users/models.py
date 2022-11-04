@@ -20,3 +20,5 @@ class User(AbstractUser):
         related_name="users",
         null=True,
     )
+
+    REQUIRED_FIELDS = ["nickname", "birthday", "email"]

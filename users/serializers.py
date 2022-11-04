@@ -30,6 +30,8 @@ class UserSerializer(serializers.ModelSerializer):
             "team",
             "is_staff",
             "is_team_owner",
+            "is_superuser",
+            "date_joined",
         ]
 
 
