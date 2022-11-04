@@ -12,10 +12,8 @@ class IsChampionshipOwner(permissions.BasePermission):
         return request.user.is_authenticated and request.user == champs.staff_owner
 
 
-class IsAteamOwnerAndHaveFivePlayers(permissions.BasePermission):
+class IsATeamOwner(permissions.BasePermission):
     def has_object_permission(self, request: Request, view: View, team: Team) -> bool:
-        message = "You do not have permission to perform this action."
-
         check_owner = False
 
         for user in team.users.all():
