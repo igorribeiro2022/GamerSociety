@@ -7,6 +7,7 @@ from .permissions import (
     HaveFivePlayers,
     IsTeamEsportCorrectly,
     IsChampionshipFull,
+    IsChampOwnerTryngToEnterInIt
 )
 from .serializers import (
     CreateChampionshipsSerializer,
@@ -67,6 +68,7 @@ class AddTeamsInChampionshipView(generics.UpdateAPIView):
         HaveFivePlayers,
         IsTeamEsportCorrectly,
         IsChampionshipFull,
+        IsChampOwnerTryngToEnterInIt,
     ]
     queryset = Team.objects.all()
     lookup_url_kwarg = "team_id"
