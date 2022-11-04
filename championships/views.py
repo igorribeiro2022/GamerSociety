@@ -48,15 +48,16 @@ class CreateChampionshipsView(generics.CreateAPIView):
         return serializer.save(staff_owner=self.request.user)
 
 
-class ChampionshipDetailView(generics.UpdateAPIView, generics.DestroyAPIView):
+class ChampionshipDetailView(generics.DestroyAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsChampionshipOwner]
     serializer_class = ChampionshipDetailSerializer
     lookup_url_kwarg = "cs_id"
     queryset = Championship.objects.all()
 
-    def perform_create(self, serializer):
-        return serializer.save(staff_owner=self.request.user)
+    # Comentado o perfom_create pois não se aplica dentro de uma classe que apenas possui a responsabilidade de destroy. - Pedro L.
+    # def perform_create(self, serializer):
+    #     return serializer.save(staff_owner=self.request.user)
 
 
 class AddTeamsInChampionshipView(generics.UpdateAPIView):
