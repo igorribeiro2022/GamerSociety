@@ -17,3 +17,8 @@ class GamesLowKeysSerializer(serializers.ModelSerializer):
         ]
 
 
+class GameUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Game
+        fields = "__all__"
+        read_only_fields = ["id", "name"]
