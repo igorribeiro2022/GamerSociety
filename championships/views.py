@@ -7,7 +7,8 @@ from .permissions import (
     HaveFivePlayers,
     IsTeamEsportCorrectly,
     IsChampionshipFull,
-    IsChampOwnerTryngToEnterInIt
+    IsChampOwnerTryngToEnterInIt,
+    HasAnotherChampionshipAroundSevenDays,
 )
 from .serializers import (
     CreateChampionshipsSerializer,
@@ -48,7 +49,7 @@ class CreateChampionshipsView(generics.CreateAPIView):
         return serializer.save(staff_owner=self.request.user)
 
 
-class ChampionshipDetailView(generics.DestroyAPIView):
+class DeleteChampionshipView(generics.DestroyAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsChampionshipOwner]
     serializer_class = ChampionshipDetailSerializer
@@ -70,6 +71,7 @@ class AddTeamsInChampionshipView(generics.UpdateAPIView):
         IsTeamEsportCorrectly,
         IsChampionshipFull,
         IsChampOwnerTryngToEnterInIt,
+        HasAnotherChampionshipAroundSevenDays,
     ]
     queryset = Team.objects.all()
     lookup_url_kwarg = "team_id"
@@ -80,7 +82,6 @@ class AddTeamsInChampionshipView(generics.UpdateAPIView):
         cs_id = kwargs["cs_id"]
         champ_updated = Championship.objects.get(id=cs_id)
         cham_serializer = RetrieveChampionAddingGamesSerializer(champ_updated)
-        # ipdb.set_trace()
 
         return_dict = {
             "detail": "Team has been added",
