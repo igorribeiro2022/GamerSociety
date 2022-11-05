@@ -98,3 +98,17 @@ class IsChampOwnerTryngToEnterInIt(permissions.BasePermission):
                 return False
 
         return True
+
+
+class TeamOwnerHasBalanceToEnterInChampionship(permissions.BasePermission):
+    def has_object_permission(self, request: Request, view: View, team: Team) -> bool:
+        self.message = "Don't have enough money"
+        
+        user_balance = request.user.history.balance
+        
+        cs_id = view.kwargs["cs_id"]
+        champ = Championship.objects.get(id=cs_id)
+        
+        champ_entry_amount = champ.entry_amount
+        
+        return user_balance >= champ_entry_amount
