@@ -1,9 +1,8 @@
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
-from utils.permissions import IsStaff
 from .permissions import IsStaffCampOwner, HasTeamsOnGame
-from utils.mixins import SerializerByMethodMixin
 from .models import Game
+from bet_types.models import BetType
 from .serializers import (
     GameUpdateSerializer,
     GameWinnerSerializer,
@@ -13,9 +12,7 @@ from teams.models import Team
 from championships.models import Championship
 from utils.game_name_phase import Phase
 from users.models import User
-from historys.models import History
-from transactions.models import Transaction
-import datetime
+from bets.models import Bet
 from transactions.serializers import TransactionSerializer
 
 
@@ -24,14 +21,34 @@ class ListBettableGamesView(generics.ListAPIView):
     serializer_class = GamesToBetSerializer
 
 
-class RetrieveUpdateDeleteGameView(SerializerByMethodMixin, generics.UpdateAPIView):
+class UpdateTeamsGameView(generics.UpdateAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsStaffCampOwner]
+    serializer_class = GameUpdateSerializer
     lookup_url_kwarg = "game_id"
     queryset = Game.objects.all()
-    serializer_map = {
-        "PATCH": GameUpdateSerializer,
-    }
+    
+    def patch(self, request, *args, **kwargs):
+        game = self.partial_update(request, *args, **kwargs)
+        game_obj = Game.objects.get(id=game.data['id'])
+
+        game.data["championship"]
+        bet = {
+            "team_1": game.data["team_1"],
+            "team_2": game.data["team_2"]
+        }
+        bet_created = Bet.objects.create(**bet, game=game_obj)
+        bet_type_1 = {
+            "team": game.data["team_1"]
+        }
+        bet_type_2 = {
+            "team": game.data["team_2"]
+        }
+        BetType.objects.create(**bet_type_1, bet=bet_created)
+        BetType.objects.create(**bet_type_2, bet=bet_created)
+        
+        return game
+    
 
 
 class UpdateGameWinnerView(generics.UpdateAPIView):
