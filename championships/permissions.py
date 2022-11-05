@@ -68,18 +68,22 @@ class HasAnotherChampionshipAroundSevenDays(permissions.BasePermission):
 
         championship_id = view.kwargs["cs_id"]
         championship = Championship.objects.get(id=championship_id)
-        championship_date_in_seconds = datetime.strptime(
-            championship.initial_date, "%Y-%m-%d"
-        ).timestamp()
+        champ_date = datetime(championship.initial_date.year, championship.initial_date.month, championship.initial_date.day)
+        championship_date_in_seconds = champ_date.timestamp()
 
         team_championships_date = team.championship.values("initial_date")
-
-        for inicial_date in team_championships_date:
-            date_in_seconds = datetime.strptime(inicial_date, "%Y-%m-%d").timestamp()
-            diference_date = abs(championship_date_in_seconds - date_in_seconds)
+        for initial_date in team_championships_date:
+            initial_datetime = datetime(initial_date['initial_date'].year,
+                            initial_date['initial_date'].month,
+                            initial_date['initial_date'].day
+                        )
+            initial_datetime_seconds = initial_datetime.timestamp()
+            diference_date = abs(championship_date_in_seconds - initial_datetime_seconds)
 
             if diference_date < day_7_in_seconds:
                 return False
+            
+        return True
 
 
 class IsChampOwnerTryngToEnterInIt(permissions.BasePermission):

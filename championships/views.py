@@ -70,7 +70,7 @@ class AddTeamsInChampionshipView(generics.UpdateAPIView):
         HaveFivePlayers,
         IsTeamEsportCorrectly,
         IsChampionshipFull,
-        IsChampOwnerTryngToEnterInIt,
+        # IsChampOwnerTryngToEnterInIt,
         HasAnotherChampionshipAroundSevenDays,
     ]
     queryset = Team.objects.all()
