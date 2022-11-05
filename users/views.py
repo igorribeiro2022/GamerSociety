@@ -5,7 +5,7 @@ from .serializers import (
     UserListSerializer,
     UserCreateSerializer,
 )
-from .permissions import IsAdmin, IsAccountOwner, IsStaffOrAccountOwner
+from .permissions import IsAdmin, IsOwnerOrAdmin, IsStaffOrAccountOwner
 
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -29,7 +29,7 @@ class CreateUserView(generics.CreateAPIView):
 
 class RetrieveUpdateUserView(generics.RetrieveUpdateAPIView):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAccountOwner]
+    permission_classes = [IsOwnerOrAdmin]
 
     lookup_url_kwarg = "user_id"
     queryset = User.objects.all()

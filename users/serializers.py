@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from users.models import User
+from historys.models import History
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -11,9 +12,10 @@ class UserSerializer(serializers.ModelSerializer):
     email = serializers.CharField(
         validators=[UniqueValidator(queryset=User.objects.all())]
     )
-    balance = serializers.FloatField(read_only=True)
     is_active = serializers.BooleanField(read_only=True)
     is_staff = serializers.BooleanField(read_only=True)
+
+    balance = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -22,7 +24,6 @@ class UserSerializer(serializers.ModelSerializer):
             "username",
             "nickname",
             "password",
-            "balance",
             "birthday",
             "email",
             "is_active",
@@ -30,14 +31,23 @@ class UserSerializer(serializers.ModelSerializer):
             "team",
             "is_staff",
             "is_team_owner",
+            "is_superuser",
+            "date_joined",
+            "balance",
         ]
+        read_only_fields = ["balance"]
+
+    def get_balance(self, user: User):
+        return user.history.balance
 
 
 class UserCreateSerializer(UserSerializer):
-    is_staff = serializers.BooleanField()
+    is_staff = serializers.BooleanField(default=False)
 
     def create(self, validated_data):
-        return User.objects.create_user(**validated_data)
+        user = User.objects.create_user(**validated_data)
+        History.objects.create(user=user)
+        return user
 
 
 class UserListSerializer(serializers.ModelSerializer):

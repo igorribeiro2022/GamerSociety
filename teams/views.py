@@ -4,12 +4,15 @@ from rest_framework.authentication import TokenAuthentication
 from teams.models import Team
 from teams.serializers import TeamSerializer
 from users.models import User
-from .permissions import IsStaff, isAuth, TeamPlayers, AlreadyHaveATeam, PlayerToBeAddedAlreadyHasATeam
+
+from .permissions import IsStaff, isAuth, AlreadyHaveATeam, PlayerToBeAddedAlreadyHasATeam, CanReallyAddThisUsersInTeam
 from django.shortcuts import get_object_or_404
+
 
 class ListTeamsView(generics.ListAPIView):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
+
 
 class CreateTeamsView(generics.CreateAPIView):
     authentication_classes = [TokenAuthentication]
@@ -24,6 +27,7 @@ class CreateTeamsView(generics.CreateAPIView):
         users = User.objects.filter(id=self.request.user.id)
         serializer.save(users=users)
 
+
 class RetrieveUpdateDeleteTeams(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsStaff]
@@ -31,18 +35,20 @@ class RetrieveUpdateDeleteTeams(generics.RetrieveUpdateDestroyAPIView):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
 
+
 class InsertUsersInTeams(generics.UpdateAPIView):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsStaff, TeamPlayers, PlayerToBeAddedAlreadyHasATeam]
+
+    permission_classes = [IsStaff, PlayerToBeAddedAlreadyHasATeam, CanReallyAddThisUsersInTeam]
+
 
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
 
     def perform_update(self, serializer):
-        request_user = get_object_or_404(User, username=self.request.user.username)
-        users_to_insert = [request_user]
+        get_object_or_404(User, username=self.request.user.username)
+        users_to_insert = []
         for value in self.request.data.values():
             user = get_object_or_404(User, username=value)
             users_to_insert.append(user)
         serializer.save(users=users_to_insert)
-        

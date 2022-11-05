@@ -54,7 +54,8 @@ MY_APPS = [
     "games",
     "championships",
     "teams",
-    "bets"
+    "historys",
+    "transactions",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + MY_APPS
@@ -69,7 +70,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = '_gamer_society.urls'
+ROOT_URLCONF = "_gamer_society.urls"
 
 TEMPLATES = [
     {

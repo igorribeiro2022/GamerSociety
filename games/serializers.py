@@ -33,9 +33,13 @@ class GameWinnerSerializer(serializers.ModelSerializer):
         model = Game
         fields = [
             "id",
-            "winner_id"
+            "winner",
             "result_team_1",
-            "result_team_2"
+            "result_team_2",
+            "team_1",
+            "team_2",
+            "phase",
+            "championship"
         ]
         read_only_fields = ["id"]
         

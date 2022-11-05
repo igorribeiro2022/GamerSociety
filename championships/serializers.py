@@ -3,12 +3,13 @@ from games.models import Game
 from teams.serializers import TeamSerializer, TeamSerializerReturn
 from .models import Championship
 from utils.game_name_phase import Names, Phase, games_list
+from utils.e_sports_choices import ESportChoices
 from teams.models import Team
 from games.serializers import GamesSerializer, GamesLowKeysSerializer
 
 
 class CreateChampionshipsSerializer(serializers.ModelSerializer):
-
+    
     games = GamesLowKeysSerializer(read_only=True, many=True)
 
     class Meta:
@@ -52,7 +53,19 @@ class ListChampionshipsSerializer(serializers.ModelSerializer):
             "winner",
             "staff_owner",
             "teams",
+            "games",
+            "teams",
         ]
+        read_only_fields = [
+            "id",
+            "name",
+            "initial_date",
+            "e_sport",
+            "winner",
+            "staff_owner",
+            "teams",
+        ]
+
         read_only_fields = [
             "id",
             "name",
