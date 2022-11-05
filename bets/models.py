@@ -8,7 +8,7 @@ class Bet(models.Model):
     is_active = models.BooleanField(default=True)
     team_1 = models.CharField(max_length=120)
     team_2 = models.CharField(max_length=120)
-    winner = models.CharField(max_length=120, null=True)
+    winner = models.CharField(max_length=120, null=True, default=None)
     total_value = models.FloatField(blank=True, default=0.0)
 
     game = models.OneToOneField(

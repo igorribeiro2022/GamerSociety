@@ -24,7 +24,8 @@ class GameUpdateSerializer(serializers.ModelSerializer):
             "id",
             "team_1",
             "team_2",
-            # "initial_date"
+            "initial_date",
+            "championship"
         ]
         read_only_fields = ["id"]
         
@@ -41,7 +42,7 @@ class GameWinnerSerializer(serializers.ModelSerializer):
             "phase",
             "championship"
         ]
-        read_only_fields = ["id"]
+        read_only_fields = ["id", "team_1", "team_2", "phase", "championship"]
         
 class GamesToBetSerializer(serializers.ModelSerializer):
     class Meta:
@@ -49,7 +50,7 @@ class GamesToBetSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "name",
-            "phase"
+            "phase",
             "team_1",
             "team_2",
             "initial_date",

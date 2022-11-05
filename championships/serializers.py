@@ -42,7 +42,7 @@ class CreateChampionshipsSerializer(serializers.ModelSerializer):
         return champ_created
 
 
-class ListChampionshipsSerializer(serializers.ModelSerializer):
+class AddTeamOnChampionshipsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Championship
         fields = [
@@ -91,6 +91,32 @@ class ChampionshipDetailSerializer(serializers.ModelSerializer):
         model = Championship
         fields = "__all__"
         read_only_fields = ["id"]
+        
+class ListAllChampionshipsSerializer(serializers.ModelSerializer):
+    teams_in_champ = serializers.SerializerMethodField()
+    class Meta:
+        model = Championship
+        fields = [
+            "id",
+            "name",
+            "entry_amount",
+            "prize",
+            "initial_date",
+            "e_sport",
+            "teams_in_champ"
+            ]
+        read_only_fields = [
+            "id",
+            "name",
+            "entry_amount",
+            "prize",
+            "initial_date",
+            "e_sport",
+            "teams_in_champ"
+            ]
+    def get_teams_in_champ(self, champ: Championship):
+        return champ.teams.count()
+
 
 
 class RetrieveChampionShipWithGamesSerializer(serializers.ModelSerializer):
