@@ -12,8 +12,8 @@ urlpatterns = [
         views.CreateChampionshipsView.as_view(),
     ),  # create
     path(
-        "championships/<str:cs_id>/management/",
-        views.ChampionshipDetailView.as_view(),
+        "championships/<str:cs_id>/delete/",
+        views.DeleteChampionshipView.as_view(),
     ),  # delete, winner patch
     path(
         "championships/<str:cs_id>/",
