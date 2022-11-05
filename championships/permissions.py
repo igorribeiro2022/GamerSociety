@@ -3,6 +3,8 @@ from rest_framework.views import Request, View, status
 from championships.models import Championship
 from teams.models import Team
 
+from datetime import datetime
+
 
 class IsChampionshipOwner(permissions.BasePermission):
     def has_object_permission(
@@ -26,7 +28,7 @@ class IsATeamOwner(permissions.BasePermission):
 
 class HaveFivePlayers(permissions.BasePermission):
     def has_object_permission(self, request: Request, view: View, team: Team) -> bool:
-        self.message = "Your must have at least 5 players"
+        self.message = "Your team must have at least 5 players"
 
         team_players_length = team.users.count()
 
@@ -35,8 +37,7 @@ class HaveFivePlayers(permissions.BasePermission):
 
 class IsTeamEsportCorrectly(permissions.BasePermission):
     def has_object_permission(self, request: Request, view: View, team: Team) -> bool:
-        message = "Your team do not have same e-sport"
-        code = status.HTTP_400_BAD_REQUEST
+        self.message = "Your team do not have same e-sport"
 
         cs_id = view.kwargs["cs_id"]
         champ = Championship.objects.get(id=cs_id)
@@ -46,8 +47,7 @@ class IsTeamEsportCorrectly(permissions.BasePermission):
 
 class IsChampionshipFull(permissions.BasePermission):
     def has_object_permission(self, request: Request, view: View, team: Team) -> bool:
-        message = "The championship is full"
-        code = status.HTTP_400_BAD_REQUEST
+        self.message = "The championship is full"
 
         cs_id = view.kwargs["cs_id"]
         champ = Championship.objects.get(id=cs_id)
@@ -57,11 +57,29 @@ class IsChampionshipFull(permissions.BasePermission):
         return number_teams < 8
 
 
-class HasAnotherChampAroundSevenDays(permissions.BasePermission):
+class HasAnotherChampionshipAroundSevenDays(permissions.BasePermission):
     def has_object_permission(self, request: Request, view: View, team: Team) -> bool:
+        self.message = "You've other championship around this championship date"
+
+        day_7_in_seconds = 604800
+
         if team.championship.count() == 0:
             return True
-        self.message = "You've other championship around this championship date"
+
+        championship_id = view.kwargs["cs_id"]
+        championship = Championship.objects.get(id=championship_id)
+        championship_date_in_seconds = datetime.strptime(
+            championship.initial_date, "%Y-%m-%d"
+        ).timestamp()
+
+        team_championships_date = team.championship.values("initial_date")
+
+        for inicial_date in team_championships_date:
+            date_in_seconds = datetime.strptime(inicial_date, "%Y-%m-%d").timestamp()
+            diference_date = abs(championship_date_in_seconds - date_in_seconds)
+
+            if diference_date < day_7_in_seconds:
+                return False
 
 
 class IsChampOwnerTryngToEnterInIt(permissions.BasePermission):
@@ -70,9 +88,9 @@ class IsChampOwnerTryngToEnterInIt(permissions.BasePermission):
         cs_id = view.kwargs["cs_id"]
         champ = Championship.objects.get(id=cs_id)
         champ_owner_id = champ.staff_owner.id
-        
+
         for user in team.users.all():
             if user.id == champ_owner_id:
                 return False
-        
+
         return True
