@@ -9,7 +9,9 @@ from .permissions import (
     IsChampionshipFull,
     IsChampOwnerTryngToEnterInIt,
     HasAnotherChampionshipAroundSevenDays,
+    TeamOwnerHasBalanceToEnterInChampionship
 )
+from transactions.serializers import TransactionSerializer
 from .serializers import (
     CreateChampionshipsSerializer,
     ListChampionshipsSerializer,
@@ -66,23 +68,35 @@ class AddTeamsInChampionshipView(generics.UpdateAPIView):
     permission_classes = [
         IsAuthenticated,
         IsATeamOwner,
-        IsATeamOwner,
         HaveFivePlayers,
         IsTeamEsportCorrectly,
         IsChampionshipFull,
-        # IsChampOwnerTryngToEnterInIt,
+        IsChampOwnerTryngToEnterInIt,
         HasAnotherChampionshipAroundSevenDays,
+        TeamOwnerHasBalanceToEnterInChampionship
+        
     ]
     queryset = Team.objects.all()
     lookup_url_kwarg = "team_id"
     serializer_class = ListChampionshipsSerializer
 
     def patch(self, request, *args, **kwargs):
+        # Linha 82 é o retorno do update do ListChampionshipSerializer, só feita a relação
         self.partial_update(request, *args, **kwargs)
         cs_id = kwargs["cs_id"]
+        # Capturar o championship atualizado para repassá-lo no serializer
+        #       para controlar retorno
         champ_updated = Championship.objects.get(id=cs_id)
         cham_serializer = RetrieveChampionAddingGamesSerializer(champ_updated)
-
+        # Criar transação de entrada no camp
+        
+        prize = {
+            "value": -champ_updated.entry_amount
+        }
+        trans = TransactionSerializer(data=prize)
+        trans.is_valid(raise_exception=True)
+        trans.save(user=request.user)
+        
         return_dict = {
             "detail": "Team has been added",
             "teams_in_championship": cham_serializer.data["teams"],
