@@ -2,7 +2,6 @@ from rest_framework import permissions
 from rest_framework.views import Request, View, status
 from championships.models import Championship
 from teams.models import Team
-import ipdb
 from datetime import datetime
 
 
