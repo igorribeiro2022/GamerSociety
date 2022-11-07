@@ -1,7 +1,7 @@
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
 from utils.permissions import IsStaff
-
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .permissions import (
     IsStaffCampOwner,
@@ -143,3 +143,11 @@ class UpdateGameWinnerView(generics.UpdateAPIView):
         # TRIGGER TO CLOSE GAME BET AND GIVE MONEY
 
         return game
+
+
+class RetrieveGameView(generics.RetrieveAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    lookup_url_kwarg = "game_id"
+    queryset = Game.objects.all()
+    serializer_class = GamesToBetSerializer
