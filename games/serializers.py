@@ -24,7 +24,8 @@ class GameUpdateSerializer(serializers.ModelSerializer):
             "id",
             "team_1",
             "team_2",
-            # "initial_date"
+            "initial_date",
+            "championship",
         ]
         read_only_fields = ["id"]
         
