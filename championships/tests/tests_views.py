@@ -106,7 +106,7 @@ class ChampionshipViewTest(TestCase):
         cls.championship = {
             "name": "VALORANT $75 PRIZE",
             "initial_date": "2022-11-22",
-            "e-sport": "Valorant",
+            "e_sport": "Valorant",
             "entry_amount": 10.0,
             "prize": 75.0
         }
@@ -114,7 +114,7 @@ class ChampionshipViewTest(TestCase):
         cls.championship_other_data = {
             "name": "VALORANT $85 PRIZE",
             "initial_date": "2022-11-23",
-            "e-sport": "Valorant",
+            "e_sport": "Valorant",
             "entry_amount": 10.0,
             "prize": 85.0
         }
@@ -123,7 +123,7 @@ class ChampionshipViewTest(TestCase):
             "id": str,
             "name": "VALORANT $75 PRIZE",
             "initial_date": "2022-11-22",
-            "e-sport": "Valorant",
+            "e_sport": "Valorant",
             "winner": str,
             "staff_owner": object,
             "entry_amount": 10.0,
@@ -136,7 +136,7 @@ class ChampionshipViewTest(TestCase):
             "id": str,
             "name": "VALORANT $75 PRIZE",
             "initial_date": "2022-11-22",
-            "e-sport": "Valorant",
+            "e_sport": "Valorant",
             "winner": str,
             "staff_owner": object,
             "teams": [Team],
@@ -146,7 +146,7 @@ class ChampionshipViewTest(TestCase):
         cls.championship_wrong_keys = {
             "name": "VALORANT $75 PRIZE",
             "initial_date": "2022-11-22",
-            "e-sport": "VALORANT",
+            "e_sport": "VALORANT",
             "entry_amount": "$10",
             "prize": "$75"
         }

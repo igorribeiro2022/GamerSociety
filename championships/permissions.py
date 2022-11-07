@@ -37,7 +37,7 @@ class HaveFivePlayers(permissions.BasePermission):
 
 class IsTeamEsportCorrectly(permissions.BasePermission):
     def has_object_permission(self, request: Request, view: View, team: Team) -> bool:
-        self.message = "Your team do not have same e-sport"
+        self.message = "Your team do not have same e_sport"
 
         cs_id = view.kwargs["cs_id"]
         champ = Championship.objects.get(id=cs_id)
