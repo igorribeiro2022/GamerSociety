@@ -87,3 +87,13 @@ class IsInitialDateInFuture(permissions.BasePermission, NewClassPermission):
         )
         game_date_in_seconds = game_date.timestamp()
         return game_date_in_seconds > date_now
+
+
+class IsThere8TeamsInCamp(permissions.BasePermission, NewClassPermission):
+    def has_object_permission(self, request, view, game: Game):
+        self.message = "Championship must be full to init one game, check championship teams, must have eigth"
+        champ = Championship.objects.get(id=game.championship.id)
+        teams_in_champ = champ.teams.count()
+        expected = 8
+        return teams_in_champ == expected
+        

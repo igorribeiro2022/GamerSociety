@@ -9,6 +9,7 @@ from .permissions import (
     RequestMethodIsPut,
     IsDateAfterChampInitialDate,
     IsInitialDateInFuture,
+    IsThere8TeamsInCamp
 )
 
 from utils.mixins import SerializerByMethodMixin
@@ -37,6 +38,7 @@ class UpdateTeamsGameView(generics.UpdateAPIView):
     permission_classes = [
         RequestMethodIsPut,
         IsStaffCampOwner,
+        IsThere8TeamsInCamp,
         IsDateAfterChampInitialDate,
         IsInitialDateInFuture,
     ]
