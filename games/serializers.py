@@ -32,6 +32,10 @@ class GameUpdateSerializer(serializers.ModelSerializer):
         read_only_fields = ["id"]
         
 class GameWinnerSerializer(serializers.ModelSerializer):
+    winner = serializers.CharField(max_length=120)
+    result_team_1 = serializers.IntegerField()
+    result_team_2 = serializers.IntegerField()
+
     class Meta:
         model = Game
         fields = [
@@ -42,9 +46,9 @@ class GameWinnerSerializer(serializers.ModelSerializer):
             "team_1",
             "team_2",
             "phase",
-            "championship"
+            "championship",
         ]
-        read_only_fields = ["id"]
+        read_only_fields = ["id", "phase", "championship"]
         
 class BettableGamesChampionshipSerializer(serializers.ModelSerializer):
     class Meta:
