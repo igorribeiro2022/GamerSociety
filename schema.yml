@@ -1,0 +1,1567 @@
+openapi: 3.0.3
+info:
+  title: Gamers Society
+  version: 1.0.0
+  description: Create or join championships with your team with great prizes. GS has
+    a bet system to championship games, so come with us have fun and make money
+paths:
+  /api/balance/:
+    get:
+      operationId: api_balance_retrieve
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/championships/{cs_id}/:
+    get:
+      operationId: api_championships_retrieve
+      parameters:
+      - in: path
+        name: cs_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveChampionShipWithGames'
+          description: ''
+  /api/championships/{cs_id}/add-teams/{team_id}/:
+    put:
+      operationId: api_championships_add_teams_update
+      parameters:
+      - in: path
+        name: cs_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: team_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddTeamOnChampionships'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AddTeamOnChampionships'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AddTeamOnChampionships'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddTeamOnChampionships'
+          description: ''
+    patch:
+      operationId: api_championships_add_teams_partial_update
+      parameters:
+      - in: path
+        name: cs_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: team_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAddTeamOnChampionships'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAddTeamOnChampionships'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAddTeamOnChampionships'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddTeamOnChampionships'
+          description: ''
+  /api/championships/{cs_id}/delete/:
+    delete:
+      operationId: api_championships_delete_destroy
+      parameters:
+      - in: path
+        name: cs_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/championships/list/:
+    get:
+      operationId: api_championships_list_list
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ListAllChampionships'
+          description: ''
+  /api/championships/register/:
+    post:
+      operationId: api_championships_register_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateChampionships'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateChampionships'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateChampionships'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateChampionships'
+          description: ''
+  /api/games/:
+    get:
+      operationId: api_games_list
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GamesToBet'
+          description: ''
+  /api/games/{game_id}/:
+    put:
+      operationId: api_games_update
+      parameters:
+      - in: path
+        name: game_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GameUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GameUpdate'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameUpdate'
+          description: ''
+    patch:
+      operationId: api_games_partial_update
+      parameters:
+      - in: path
+        name: game_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedGameUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedGameUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedGameUpdate'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameUpdate'
+          description: ''
+  /api/games/{game_id}/winner/:
+    put:
+      operationId: api_games_winner_update
+      parameters:
+      - in: path
+        name: game_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameWinner'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GameWinner'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GameWinner'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameWinner'
+          description: ''
+    patch:
+      operationId: api_games_winner_partial_update
+      parameters:
+      - in: path
+        name: game_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedGameWinner'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedGameWinner'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedGameWinner'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameWinner'
+          description: ''
+  /api/login/:
+    post:
+      operationId: api_login_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthToken'
+          description: ''
+  /api/teams/:
+    get:
+      operationId: api_teams_list
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Team'
+          description: ''
+  /api/teams/{id}/:
+    get:
+      operationId: api_teams_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+          description: ''
+    put:
+      operationId: api_teams_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Team'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Team'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Team'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+          description: ''
+    patch:
+      operationId: api_teams_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTeam'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTeam'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTeam'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+          description: ''
+    delete:
+      operationId: api_teams_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/teams/add/{id}/:
+    put:
+      operationId: api_teams_add_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Team'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Team'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Team'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+          description: ''
+    patch:
+      operationId: api_teams_add_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTeam'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTeam'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTeam'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+          description: ''
+  /api/teams/register/:
+    post:
+      operationId: api_teams_register_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Team'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Team'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Team'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+          description: ''
+  /api/transactions/:
+    post:
+      operationId: api_transactions_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+          description: ''
+  /api/users/:
+    get:
+      operationId: api_users_list
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserList'
+          description: ''
+  /api/users/{user_id}/:
+    get:
+      operationId: api_users_retrieve
+      parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    put:
+      operationId: api_users_update
+      parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: api_users_partial_update
+      parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/users/{user_id}/activity/:
+    put:
+      operationId: api_users_activity_update
+      parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserActivity'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserActivity'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserActivity'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserActivity'
+          description: ''
+    patch:
+      operationId: api_users_activity_partial_update
+      parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserActivity'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserActivity'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserActivity'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserActivity'
+          description: ''
+  /api/users/register/:
+    post:
+      operationId: api_users_register_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCreate'
+          description: ''
+components:
+  schemas:
+    AddTeamOnChampionships:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        initial_date:
+          type: string
+          format: date
+          readOnly: true
+        e_sport:
+          allOf:
+          - $ref: '#/components/schemas/ESportEnum'
+          readOnly: true
+        winner:
+          type: string
+          readOnly: true
+          nullable: true
+        staff_owner:
+          type: string
+          format: uuid
+          readOnly: true
+        teams:
+          type: array
+          items:
+            type: string
+            format: uuid
+          readOnly: true
+        games:
+          type: array
+          items:
+            type: string
+            format: uuid
+      required:
+      - e_sport
+      - games
+      - id
+      - initial_date
+      - name
+      - staff_owner
+      - teams
+      - winner
+    AuthToken:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        token:
+          type: string
+          readOnly: true
+      required:
+      - password
+      - token
+      - username
+    BettableGamesChampionship:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 120
+      required:
+      - id
+      - name
+    CreateChampionships:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 120
+        initial_date:
+          type: string
+          format: date
+        e_sport:
+          $ref: '#/components/schemas/ESportEnum'
+        winner:
+          type: string
+          nullable: true
+          maxLength: 50
+        staff_owner:
+          type: string
+          format: uuid
+          readOnly: true
+        entry_amount:
+          type: number
+          format: double
+        prize:
+          type: number
+          format: double
+        teams:
+          type: array
+          items:
+            type: string
+            format: uuid
+          readOnly: true
+        games:
+          type: array
+          items:
+            $ref: '#/components/schemas/GamesLowKeys'
+          readOnly: true
+      required:
+      - entry_amount
+      - games
+      - id
+      - initial_date
+      - name
+      - prize
+      - staff_owner
+      - teams
+    ESportEnum:
+      enum:
+      - League of Legends
+      - Overwatch
+      - Counter Strike
+      - Valorant
+      - Is not in a championship
+      type: string
+    GameUpdate:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        team_1:
+          type: string
+        team_2:
+          type: string
+        initial_date:
+          type: string
+          format: date
+        championship:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - championship
+      - id
+      - initial_date
+      - team_1
+      - team_2
+    GameWinner:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        winner:
+          type: string
+          maxLength: 120
+        result_team_1:
+          type: integer
+        result_team_2:
+          type: integer
+        team_1:
+          type: string
+          nullable: true
+          maxLength: 120
+        team_2:
+          type: string
+          nullable: true
+          maxLength: 120
+        phase:
+          allOf:
+          - $ref: '#/components/schemas/PhaseEnum'
+          readOnly: true
+        championship:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - championship
+      - id
+      - phase
+      - result_team_1
+      - result_team_2
+      - winner
+    Games:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          $ref: '#/components/schemas/NameEnum'
+        phase:
+          $ref: '#/components/schemas/PhaseEnum'
+        initial_date:
+          type: string
+          format: date
+          nullable: true
+        winner:
+          type: string
+          nullable: true
+          maxLength: 120
+        result_team_1:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        result_team_2:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        team_1:
+          type: string
+          nullable: true
+          maxLength: 120
+        team_2:
+          type: string
+          nullable: true
+          maxLength: 120
+        championship:
+          type: string
+          format: uuid
+      required:
+      - championship
+      - id
+    GamesLowKeys:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/NameEnum'
+        phase:
+          $ref: '#/components/schemas/PhaseEnum'
+    GamesToBet:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          allOf:
+          - $ref: '#/components/schemas/NameEnum'
+          readOnly: true
+        phase:
+          allOf:
+          - $ref: '#/components/schemas/PhaseEnum'
+          readOnly: true
+        team_1:
+          type: string
+          readOnly: true
+          nullable: true
+        team_2:
+          type: string
+          readOnly: true
+          nullable: true
+        initial_date:
+          type: string
+          format: date
+          readOnly: true
+          nullable: true
+        championship:
+          $ref: '#/components/schemas/BettableGamesChampionship'
+      required:
+      - championship
+      - id
+      - initial_date
+      - name
+      - phase
+      - team_1
+      - team_2
+    ListAllChampionships:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        entry_amount:
+          type: number
+          format: double
+          readOnly: true
+        prize:
+          type: number
+          format: double
+          readOnly: true
+        initial_date:
+          type: string
+          format: date
+          readOnly: true
+        e_sport:
+          allOf:
+          - $ref: '#/components/schemas/ESportEnum'
+          readOnly: true
+        teams_in_champ:
+          type: string
+          readOnly: true
+      required:
+      - e_sport
+      - entry_amount
+      - id
+      - initial_date
+      - name
+      - prize
+      - teams_in_champ
+    NameEnum:
+      enum:
+      - Game 1
+      - Game 2
+      - Game 3
+      - Game 4
+      type: string
+    PatchedAddTeamOnChampionships:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        initial_date:
+          type: string
+          format: date
+          readOnly: true
+        e_sport:
+          allOf:
+          - $ref: '#/components/schemas/ESportEnum'
+          readOnly: true
+        winner:
+          type: string
+          readOnly: true
+          nullable: true
+        staff_owner:
+          type: string
+          format: uuid
+          readOnly: true
+        teams:
+          type: array
+          items:
+            type: string
+            format: uuid
+          readOnly: true
+        games:
+          type: array
+          items:
+            type: string
+            format: uuid
+    PatchedGameUpdate:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        team_1:
+          type: string
+        team_2:
+          type: string
+        initial_date:
+          type: string
+          format: date
+        championship:
+          type: string
+          format: uuid
+          readOnly: true
+    PatchedGameWinner:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        winner:
+          type: string
+          maxLength: 120
+        result_team_1:
+          type: integer
+        result_team_2:
+          type: integer
+        team_1:
+          type: string
+          nullable: true
+          maxLength: 120
+        team_2:
+          type: string
+          nullable: true
+          maxLength: 120
+        phase:
+          allOf:
+          - $ref: '#/components/schemas/PhaseEnum'
+          readOnly: true
+        championship:
+          type: string
+          format: uuid
+          readOnly: true
+    PatchedTeam:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserForTeam'
+          readOnly: true
+          nullable: true
+        name:
+          type: string
+          maxLength: 50
+        initials:
+          type: string
+          maxLength: 5
+        wins:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        losses:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        e_sport:
+          $ref: '#/components/schemas/ESportEnum'
+        championship:
+          type: array
+          items:
+            type: string
+            format: uuid
+          readOnly: true
+    PatchedUser:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        username:
+          type: string
+          maxLength: 20
+        nickname:
+          type: string
+          maxLength: 20
+        password:
+          type: string
+          writeOnly: true
+        birthday:
+          type: string
+          format: date
+        email:
+          type: string
+        is_active:
+          type: boolean
+          readOnly: true
+        is_player:
+          type: boolean
+          nullable: true
+        team:
+          type: string
+          format: uuid
+          nullable: true
+        is_staff:
+          type: boolean
+          readOnly: true
+        is_team_owner:
+          type: boolean
+          nullable: true
+        is_superuser:
+          type: boolean
+          title: Superuser status
+          description: Designates that this user has all permissions without explicitly
+            assigning them.
+        date_joined:
+          type: string
+          format: date-time
+        balance:
+          type: string
+          readOnly: true
+    PatchedUserActivity:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        is_active:
+          type: boolean
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+    PhaseEnum:
+      enum:
+      - Quartas Upper
+      - Semi Upper
+      - Semi Lower
+      - Final Upper
+      - Final Lower
+      - Final Champions
+      - Not Subscribed
+      type: string
+    RetrieveChampionShipWithGames:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        games:
+          type: array
+          items:
+            $ref: '#/components/schemas/Games'
+        teams:
+          type: array
+          items:
+            $ref: '#/components/schemas/Team'
+        name:
+          type: string
+          maxLength: 120
+        initial_date:
+          type: string
+          format: date
+        e_sport:
+          $ref: '#/components/schemas/ESportEnum'
+        winner:
+          type: string
+          nullable: true
+          maxLength: 50
+        entry_amount:
+          type: number
+          format: double
+        prize:
+          type: number
+          format: double
+        staff_owner:
+          type: string
+          format: uuid
+      required:
+      - entry_amount
+      - games
+      - id
+      - initial_date
+      - name
+      - prize
+      - staff_owner
+      - teams
+    Team:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserForTeam'
+          readOnly: true
+          nullable: true
+        name:
+          type: string
+          maxLength: 50
+        initials:
+          type: string
+          maxLength: 5
+        wins:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        losses:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        e_sport:
+          $ref: '#/components/schemas/ESportEnum'
+        championship:
+          type: array
+          items:
+            type: string
+            format: uuid
+          readOnly: true
+      required:
+      - championship
+      - id
+      - initials
+      - name
+      - users
+    Transaction:
+      type: object
+      properties:
+        value:
+          type: number
+          format: double
+        date:
+          type: string
+          format: date-time
+          readOnly: true
+        history:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - date
+      - history
+      - value
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        username:
+          type: string
+          maxLength: 20
+        nickname:
+          type: string
+          maxLength: 20
+        password:
+          type: string
+          writeOnly: true
+        birthday:
+          type: string
+          format: date
+        email:
+          type: string
+        is_active:
+          type: boolean
+          readOnly: true
+        is_player:
+          type: boolean
+          nullable: true
+        team:
+          type: string
+          format: uuid
+          nullable: true
+        is_staff:
+          type: boolean
+          readOnly: true
+        is_team_owner:
+          type: boolean
+          nullable: true
+        is_superuser:
+          type: boolean
+          title: Superuser status
+          description: Designates that this user has all permissions without explicitly
+            assigning them.
+        date_joined:
+          type: string
+          format: date-time
+        balance:
+          type: string
+          readOnly: true
+      required:
+      - balance
+      - birthday
+      - email
+      - id
+      - is_active
+      - is_staff
+      - nickname
+      - password
+      - username
+    UserActivity:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        is_active:
+          type: boolean
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+      required:
+      - id
+    UserCreate:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        username:
+          type: string
+          maxLength: 20
+        nickname:
+          type: string
+          maxLength: 20
+        password:
+          type: string
+          writeOnly: true
+        birthday:
+          type: string
+          format: date
+        email:
+          type: string
+        is_active:
+          type: boolean
+          readOnly: true
+        is_player:
+          type: boolean
+          nullable: true
+        team:
+          type: string
+          format: uuid
+          nullable: true
+        is_staff:
+          type: boolean
+          default: false
+        is_team_owner:
+          type: boolean
+          nullable: true
+        is_superuser:
+          type: boolean
+          title: Superuser status
+          description: Designates that this user has all permissions without explicitly
+            assigning them.
+        date_joined:
+          type: string
+          format: date-time
+        balance:
+          type: string
+          readOnly: true
+      required:
+      - balance
+      - birthday
+      - email
+      - id
+      - is_active
+      - nickname
+      - password
+      - username
+    UserForTeam:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        nickname:
+          type: string
+          maxLength: 20
+      required:
+      - id
+      - nickname
+    UserList:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        username:
+          type: string
+          maxLength: 20
+        nickname:
+          type: string
+          maxLength: 20
+        birthday:
+          type: string
+          format: date
+        email:
+          type: string
+          format: email
+          maxLength: 127
+        is_active:
+          type: boolean
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+        is_player:
+          type: boolean
+          nullable: true
+        team:
+          type: string
+          format: uuid
+          nullable: true
+        is_staff:
+          type: boolean
+          nullable: true
+      required:
+      - birthday
+      - email
+      - id
+      - nickname
+      - username
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

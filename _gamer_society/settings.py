@@ -31,7 +31,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['gamers-society.herokuapp.com', 'localhost', 'http://127.0.0.1:8000']
+ALLOWED_HOSTS = ['gamers-society.herokuapp.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -48,6 +48,7 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
+    'drf_spectacular',
 ]
 
 MY_APPS = [
@@ -88,6 +89,18 @@ TEMPLATES = [
         },
     },
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Gamers Society',
+    'DESCRIPTION': 'Create or join championships with your team with great prizes. GS has a bet system to championship games, so come with us have fun and make money',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # OTHER SETTINGS
+}
 
 WSGI_APPLICATION = "_gamer_society.wsgi.application"
 
