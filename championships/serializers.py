@@ -133,3 +133,10 @@ class RetrieveChampionAddingGamesSerializer(RetrieveChampionShipWithGamesSeriali
 
     # games = GamesSerializer(many=True)
     teams = TeamSerializerReturn(many=True)
+    
+    
+class BettableGamesChampionshipSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Championship
+        fields = ["id", "name"]
+        read_only_fields = ["id"]

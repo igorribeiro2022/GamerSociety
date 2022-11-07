@@ -24,3 +24,9 @@ class TransactionSerializer(ModelSerializer):
         history_obj.save()
 
         return transaction
+
+
+class TransactionForBalanceSerializer(ModelSerializer):
+    class Meta:
+        model = Transaction
+        fields = ["value", "date"]
