@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import UserBet
 from bet_types.models import BetType
 from transactions.serializers import TransactionSerializer
+from bets.models import Bet
 
 class UserBetCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,6 +20,10 @@ class UserBetCreateSerializer(serializers.ModelSerializer):
         bet_type = BetType.objects.get(bet=game_bet, team=team_obj.id)
         bet_type.total_value += validated_data['value']
         bet_type.save() 
+
+        bet = Bet.objects.get(id = game_bet.id)
+        bet.total_value += validated_data['value']
+        bet.save() 
         
         prize = {"value": -validated_data['value']}
 
