@@ -39,9 +39,9 @@ class UpdateTeamsGameView(generics.UpdateAPIView):
         RequestMethodIsPut,
         IsStaffCampOwner,
         IsDateAfterChampInitialDate,
-         IsInitialDateInFuture,
+        IsInitialDateInFuture,
     ]
-    
+
     lookup_url_kwarg = "game_id"
     queryset = Game.objects.all()
     serializer_class = GameUpdateSerializer
@@ -71,7 +71,7 @@ class UpdateTeamsGameView(generics.UpdateAPIView):
 
 class UpdateGameWinnerView(generics.UpdateAPIView):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [RequestMethodIsPut, IsStaffCampOwner, HasTeamsOnGame ]
+    permission_classes = [RequestMethodIsPut, IsStaffCampOwner, HasTeamsOnGame]
     lookup_url_kwarg = "game_id"
     queryset = Game.objects.all()
     serializer_class = GameWinnerSerializer
