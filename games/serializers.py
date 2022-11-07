@@ -29,7 +29,7 @@ class GameUpdateSerializer(serializers.ModelSerializer):
             "initial_date",
             "championship",
         ]
-        read_only_fields = ["id"]
+        read_only_fields = ["id", "championship"]
         
 class GameWinnerSerializer(serializers.ModelSerializer):
     winner = serializers.CharField(max_length=120)
