@@ -9,6 +9,8 @@ from .permissions import (
     RequestMethodIsPut,
     IsDateAfterChampInitialDate,
     IsInitialDateInFuture,
+    IsValidTeam,
+    IsTeam1And2TheSame
 )
 
 from utils.mixins import SerializerByMethodMixin
@@ -39,6 +41,8 @@ class UpdateTeamsGameView(generics.UpdateAPIView):
         IsStaffCampOwner,
         IsDateAfterChampInitialDate,
         IsInitialDateInFuture,
+        IsValidTeam,
+        IsTeam1And2TheSame
     ]
 
     lookup_url_kwarg = "game_id"
