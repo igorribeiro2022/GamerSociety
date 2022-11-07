@@ -83,7 +83,7 @@ class IsValidTeam(permissions.BasePermission, NewClassPermission):
 
 
 class IsInitialDateInFuture(permissions.BasePermission, NewClassPermission):
-    def has_date_permission(self, request: Request, view: View):
+    def has_date_permission(self, request: Request, view: View, game: Game):
         self.message = "Initial date must be future days"
         initial_date_list = request.data["initial_date"].split("-")
         date_now = datetime.now().timestamp()
