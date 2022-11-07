@@ -10,7 +10,7 @@ class Team(models.Model):
     initials = models.CharField(max_length=5)
     wins = models.PositiveIntegerField(default=0)
     losses = models.PositiveIntegerField(default=0)
-    e_sports = models.CharField(
+    e_sport = models.CharField(
         max_length=50,
         choices=ESportChoices.choices,
         default=ESportChoices.DEFAULT,

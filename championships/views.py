@@ -9,7 +9,8 @@ from .permissions import (
     IsChampionshipFull,
     IsChampOwnerTryngToEnterInIt,
     HasAnotherChampionshipAroundSevenDays,
-    TeamOwnerHasBalanceToEnterInChampionship
+    TeamOwnerHasBalanceToEnterInChampionship,
+    InitialDateProvidedIsAtLeastSevenDaysAfter
 )
 from transactions.serializers import TransactionSerializer
 from .serializers import (
@@ -45,7 +46,7 @@ class ListOneChampionshipView(generics.RetrieveAPIView):
 
 class CreateChampionshipsView(generics.CreateAPIView):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsStaff]
+    permission_classes = [IsStaff, InitialDateProvidedIsAtLeastSevenDaysAfter]
 
     serializer_class = CreateChampionshipsSerializer
     queryset = Championship.objects.all()
