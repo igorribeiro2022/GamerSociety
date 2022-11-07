@@ -15,15 +15,18 @@ from .permissions import (
 from transactions.serializers import TransactionSerializer
 from .serializers import (
     CreateChampionshipsSerializer,
+    AddTeamOnChampionshipsSerializer,
     ChampionshipDetailSerializer,
     RetrieveChampionShipWithGamesSerializer,
     ListAllChampionshipsSerializer,
     AddTeamOnChampionshipsSerializer,
     RetrieveChampionAddingGamesSerializer,
+    ListAllChampionshipsSerializer
 )
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from utils.permissions import IsStaff
+from rest_framework.permissions import IsAuthenticated
 from teams.models import Team
 from rest_framework import views
 
