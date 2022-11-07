@@ -24,3 +24,12 @@ class HasTeamsOnGame(permissions.BasePermission):
             
         
         return (has_team_1 and has_team_2)
+    
+    
+class RequestMethodIsPut(permissions.BasePermission):
+    def has_permission(self, request: Request, view: View) -> bool:
+        self.message = "Only PUT method allowed"
+        if request.method == "PATCH":
+            return False
+        
+        return True

@@ -133,3 +133,5 @@ class RetrieveChampionAddingGamesSerializer(RetrieveChampionShipWithGamesSeriali
 
     # games = GamesSerializer(many=True)
     teams = TeamSerializerReturn(many=True)
+    
+    
