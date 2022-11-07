@@ -2,7 +2,6 @@ from rest_framework import permissions
 from rest_framework.views import Request, View, status
 from championships.models import Championship
 from teams.models import Team
-
 from datetime import datetime
 
 
@@ -68,21 +67,28 @@ class HasAnotherChampionshipAroundSevenDays(permissions.BasePermission):
 
         championship_id = view.kwargs["cs_id"]
         championship = Championship.objects.get(id=championship_id)
-        champ_date = datetime(championship.initial_date.year, championship.initial_date.month, championship.initial_date.day)
+        champ_date = datetime(
+            championship.initial_date.year,
+            championship.initial_date.month,
+            championship.initial_date.day,
+        )
         championship_date_in_seconds = champ_date.timestamp()
 
         team_championships_date = team.championship.values("initial_date")
         for initial_date in team_championships_date:
-            initial_datetime = datetime(initial_date['initial_date'].year,
-                            initial_date['initial_date'].month,
-                            initial_date['initial_date'].day
-                        )
+            initial_datetime = datetime(
+                initial_date["initial_date"].year,
+                initial_date["initial_date"].month,
+                initial_date["initial_date"].day,
+            )
             initial_datetime_seconds = initial_datetime.timestamp()
-            diference_date = abs(championship_date_in_seconds - initial_datetime_seconds)
+            diference_date = abs(
+                championship_date_in_seconds - initial_datetime_seconds
+            )
 
             if diference_date < day_7_in_seconds:
                 return False
-            
+
         return True
 
 
@@ -90,9 +96,13 @@ class InitialDateProvidedIsAtLeastSevenDaysAfter(permissions.BasePermission):
     def has_permission(self, request: Request, view: View) -> bool:
         self.message = "Only initial dates after 7 days by now"
         day_7_in_seconds = 604800
-        initial_date_list = request.data['initial_date'].split("-")
+        initial_date_list = request.data["initial_date"].split("-")
         date_now = datetime.now().timestamp()
-        champ_date = datetime(int(initial_date_list[0]), int(initial_date_list[1]), int(initial_date_list[2]))
+        champ_date = datetime(
+            int(initial_date_list[0]),
+            int(initial_date_list[1]),
+            int(initial_date_list[2]),
+        )
         championship_date_in_seconds = champ_date.timestamp()
         sub = championship_date_in_seconds - date_now
         return sub > day_7_in_seconds
@@ -115,12 +125,12 @@ class IsChampOwnerTryngToEnterInIt(permissions.BasePermission):
 class TeamOwnerHasBalanceToEnterInChampionship(permissions.BasePermission):
     def has_object_permission(self, request: Request, view: View, team: Team) -> bool:
         self.message = "Don't have enough money"
-        
+
         user_balance = request.user.history.balance
-        
+
         cs_id = view.kwargs["cs_id"]
         champ = Championship.objects.get(id=cs_id)
-        
+
         champ_entry_amount = champ.entry_amount
-        
+
         return user_balance >= champ_entry_amount

@@ -9,6 +9,10 @@ urlpatterns = [
         views.ListAllChampionshipsView.as_view(),
     ),  # listar todos
     path(
+        "championships/list-next/",
+        views.ListNextChampionshipsView.as_view(),
+    ),  # listar próximos
+    path(
         "championships/register/",
         views.CreateChampionshipsView.as_view(),
     ),  # create
