@@ -4,6 +4,7 @@ from .serializers import (
     UserSerializer,
     UserListSerializer,
     UserCreateSerializer,
+    SuperUserCreateSerializer,
 )
 from .permissions import IsAdmin, IsOwnerOrAdmin, IsStaffOrAccountOwner
 
@@ -55,3 +56,8 @@ class LoginView(ObtainAuthToken):
         user_serializer = UserSerializer(user)
 
         return Response({"token": token.key, "user": user_serializer.data})
+
+
+class CreateSuperUserView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = SuperUserCreateSerializer
