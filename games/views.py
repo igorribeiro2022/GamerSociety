@@ -1,7 +1,7 @@
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
 from utils.permissions import IsStaff
-from .permissions import IsStaffCampOwner, HasTeamsOnGame, RequestMethodIsPut
+from .permissions import IsStaffCampOwner, HasTeamsOnGame, RequestMethodIsPut, IsVadlidTeam, IsInitialDateInFuture
 from utils.mixins import SerializerByMethodMixin
 from .models import Game
 from .serializers import (
@@ -26,7 +26,7 @@ class ListBettableGamesView(generics.ListAPIView):
 # IsValidTeams, IsDateAfterChampInitialDate, IsInitialDateInFuture
 class UpdateTeamsGameView(generics.UpdateAPIView):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [RequestMethodIsPut, IsStaffCampOwner]
+    permission_classes = [RequestMethodIsPut, IsStaffCampOwner, IsVadlidTeam, IsInitialDateInFuture]
     lookup_url_kwarg = "game_id"
     queryset = Game.objects.all()
     serializer_class = GameUpdateSerializer
@@ -34,7 +34,7 @@ class UpdateTeamsGameView(generics.UpdateAPIView):
 
 class UpdateGameWinnerView(generics.UpdateAPIView):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsStaffCampOwner, HasTeamsOnGame]
+    permission_classes = [RequestMethodIsPut, IsStaffCampOwner, HasTeamsOnGame ]
     lookup_url_kwarg = "game_id"
     queryset = Game.objects.all()
     serializer_class = GameWinnerSerializer

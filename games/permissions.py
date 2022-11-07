@@ -1,6 +1,9 @@
+from championships.models import Championship
 from rest_framework import permissions
 from rest_framework.views import Request, View
 from games.models import Game
+import ipdb
+from datetime import datetime
 
 class IsStaffCampOwner(permissions.BasePermission):
     def has_object_permission(
@@ -33,3 +36,31 @@ class RequestMethodIsPut(permissions.BasePermission):
             return False
         
         return True
+    
+    
+class IsVadlidTeam(permissions.BasePermission):
+    def has_object_permission(self, request: Request, view: View, game: Game) -> bool:
+        self.message = "Teams provided are not in championship"
+        champ = Championship.objects.get(id=game.championship.id)
+        champ_teams = champ.teams.all() 
+        has_team_1 = False
+        has_team_2 = False
+        team_1_id = request.data['team_1']
+        team_2_id = request.data['team_2'] 
+        for team in champ_teams:
+            if str(team.id) == team_1_id:
+                has_team_1 = True
+            elif str(team.id) == team_2_id:
+                has_team_2 = True   
+        
+        return (has_team_1 and has_team_2)
+    
+    
+class IsInitialDateInFuture(permissions.BasePermission):
+    def has_permission(self, request: Request, view: View):
+        self.message = "Initial date must be future days"
+        initial_date_list = request.data['initial_date'].split("-")
+        date_now = datetime.now().timestamp()
+        game_date = datetime(int(initial_date_list[0]), int(initial_date_list[1]), int(initial_date_list[2]))
+        game_date_in_seconds = game_date.timestamp()
+        return game_date_in_seconds > date_now
