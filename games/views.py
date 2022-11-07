@@ -1,6 +1,17 @@
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
-from .permissions import IsStaffCampOwner, HasTeamsOnGame
+from utils.permissions import IsStaff
+
+from rest_framework.response import Response
+from .permissions import (
+    IsStaffCampOwner,
+    HasTeamsOnGame,
+    RequestMethodIsPut,
+    IsDateAfterChampInitialDate,
+    IsInitialDateInFuture,
+)
+
+from utils.mixins import SerializerByMethodMixin
 from .models import Game
 from bet_types.models import BetType
 from .serializers import (
@@ -23,13 +34,19 @@ class ListBettableGamesView(generics.ListAPIView):
 
 class UpdateTeamsGameView(generics.UpdateAPIView):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsStaffCampOwner]
-    serializer_class = GameUpdateSerializer
+    permission_classes = [
+        RequestMethodIsPut,
+        IsStaffCampOwner,
+        IsDateAfterChampInitialDate,
+        IsInitialDateInFuture,
+    ]
+
     lookup_url_kwarg = "game_id"
     queryset = Game.objects.all()
-    
-    def patch(self, request, *args, **kwargs):
-        game = self.partial_update(request, *args, **kwargs)
+    serializer_class = GameUpdateSerializer
+
+    def put(self, request, *args, **kwargs):
+        game = self.update(request, *args, **kwargs)
         game_obj = Game.objects.get(id=game.data['id'])
 
         game.data["championship"]
@@ -48,12 +65,33 @@ class UpdateTeamsGameView(generics.UpdateAPIView):
         BetType.objects.create(**bet_type_2, bet=bet_created)
         
         return game
-    
+
+    def check_has_date_permission(self, request, obj):
+        for permission in self.get_permissions():
+            if not permission.has_date_permission(request, self, obj):
+                self.permission_denied(
+                    request,
+                    message=getattr(permission, "message", None),
+                    code=getattr(permission, "code", None),
+                )
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop("partial", False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.check_has_date_permission(self.request, instance)
+        self.perform_update(serializer)
+
+        if getattr(instance, "_prefetched_objects_cache", None):
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
 
 
 class UpdateGameWinnerView(generics.UpdateAPIView):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsStaffCampOwner, HasTeamsOnGame]
+    permission_classes = [RequestMethodIsPut, IsStaffCampOwner, HasTeamsOnGame]
     lookup_url_kwarg = "game_id"
     queryset = Game.objects.all()
     serializer_class = GameWinnerSerializer

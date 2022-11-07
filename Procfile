@@ -1,0 +1,1 @@
+web: gunicorn _gamer_society.wsgi --log-level debug

@@ -42,7 +42,7 @@ class IsTeamEsportCorrectly(permissions.BasePermission):
         cs_id = view.kwargs["cs_id"]
         champ = Championship.objects.get(id=cs_id)
 
-        return team.e_sports == champ.e_sport
+        return team.e_sport == champ.e_sport
 
 
 class IsChampionshipFull(permissions.BasePermission):
@@ -84,6 +84,18 @@ class HasAnotherChampionshipAroundSevenDays(permissions.BasePermission):
                 return False
             
         return True
+
+
+class InitialDateProvidedIsAtLeastSevenDaysAfter(permissions.BasePermission):
+    def has_permission(self, request: Request, view: View) -> bool:
+        self.message = "Only initial dates after 7 days by now"
+        day_7_in_seconds = 604800
+        initial_date_list = request.data['initial_date'].split("-")
+        date_now = datetime.now().timestamp()
+        champ_date = datetime(int(initial_date_list[0]), int(initial_date_list[1]), int(initial_date_list[2]))
+        championship_date_in_seconds = champ_date.timestamp()
+        sub = championship_date_in_seconds - date_now
+        return sub > day_7_in_seconds
 
 
 class IsChampOwnerTryngToEnterInIt(permissions.BasePermission):
