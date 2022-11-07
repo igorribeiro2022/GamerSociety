@@ -9,7 +9,7 @@ from .permissions import (
     RequestMethodIsPut,
     IsDateAfterChampInitialDate,
     IsInitialDateInFuture,
-    IsThere8TeamsInCamp
+    IsThere8TeamsInCamp,
     IsValidTeam,
     IsTeam1And2TheSame
 
