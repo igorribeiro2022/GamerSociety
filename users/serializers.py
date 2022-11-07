@@ -79,3 +79,12 @@ class UserActivitySerializer(serializers.ModelSerializer):
             "id",
             "is_active",
         ]
+
+
+class SuperUserCreateSerializer(UserSerializer):
+    is_staff = serializers.BooleanField(default=False)
+
+    def create(self, validated_data):
+        user = User.objects.create_superuser(**validated_data)
+        History.objects.create(user=user)
+        return user
