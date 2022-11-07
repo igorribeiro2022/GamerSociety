@@ -22,7 +22,7 @@ class ChampionshipModelTest(TestCase):
         cls.championship = {
             "name": "VALORANT $75 PRIZE",
             "initial_date": "2022-11-22",
-            "e-sport": "Valorant",
+            "e_sport": "Valorant",
             "entry_amount": 10.0,
             "prize": 75.0
         }

@@ -1,6 +1,7 @@
 from rest_framework.serializers import ModelSerializer
 from users.serializers import UserForTeamSerializer
 from .models import Team
+import ipdb
 
 
 class TeamSerializer(ModelSerializer):
@@ -15,7 +16,6 @@ class TeamSerializer(ModelSerializer):
     def update(self, instance, validated_data):
         users_list = validated_data["users"]
 
-        # ipdb.set_trace()
 
         for user in users_list:
             instance.users.add(user)
