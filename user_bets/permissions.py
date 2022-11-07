@@ -1,6 +1,7 @@
 from rest_framework import permissions
 from rest_framework.views import Request, View
 from games.models import Game
+from bets.models import Bet
 
 class HasMoneyToBet(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -48,3 +49,12 @@ class TeamToBetWillPlayInGame(permissions.BasePermission):
         
         return False
     
+    
+class CantBetInUnactiveGameBet(permissions.BasePermission):
+    def has_object_permission(self, request, view, game: Game):
+        self.message = "This game bet is closed, you can only bet in active games bets"
+        bet = Bet.objects.get(id=game.bet.id)
+        import ipdb
+        ipdb.set_trace()
+        return False
+        
