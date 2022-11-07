@@ -1,7 +1,16 @@
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
 from utils.permissions import IsStaff
-from .permissions import IsStaffCampOwner, HasTeamsOnGame, RequestMethodIsPut, IsVadlidTeam, IsInitialDateInFuture
+
+from rest_framework.response import Response
+from .permissions import (
+    IsStaffCampOwner,
+    HasTeamsOnGame,
+    RequestMethodIsPut,
+    IsDateAfterChampInitialDate,
+    IsInitialDateInFuture,
+)
+
 from utils.mixins import SerializerByMethodMixin
 from .models import Game
 from .serializers import (
@@ -23,13 +32,41 @@ class ListBettableGamesView(generics.ListAPIView):
     queryset = Game.objects.exclude(team_1=None, team_2=None).filter(winner=None)
     serializer_class = GamesToBetSerializer
 
-# IsValidTeams, IsDateAfterChampInitialDate, IsInitialDateInFuture
+
 class UpdateTeamsGameView(generics.UpdateAPIView):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [RequestMethodIsPut, IsStaffCampOwner, IsVadlidTeam, IsInitialDateInFuture]
+    permission_classes = [
+        RequestMethodIsPut,
+        IsStaffCampOwner,
+        IsDateAfterChampInitialDate,
+         IsInitialDateInFuture,
+    ]
+    
     lookup_url_kwarg = "game_id"
     queryset = Game.objects.all()
     serializer_class = GameUpdateSerializer
+
+    def check_has_date_permission(self, request, obj):
+        for permission in self.get_permissions():
+            if not permission.has_date_permission(request, self, obj):
+                self.permission_denied(
+                    request,
+                    message=getattr(permission, "message", None),
+                    code=getattr(permission, "code", None),
+                )
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop("partial", False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.check_has_date_permission(self.request, instance)
+        self.perform_update(serializer)
+
+        if getattr(instance, "_prefetched_objects_cache", None):
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
 
 
 class UpdateGameWinnerView(generics.UpdateAPIView):
