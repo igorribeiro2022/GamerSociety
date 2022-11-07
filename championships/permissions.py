@@ -42,7 +42,7 @@ class IsTeamEsportCorrectly(permissions.BasePermission):
         cs_id = view.kwargs["cs_id"]
         champ = Championship.objects.get(id=cs_id)
 
-        return team.e_sports == champ.e_sport
+        return team.e_sport == champ.e_sport
 
 
 class IsChampionshipFull(permissions.BasePermission):
