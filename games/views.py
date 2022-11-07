@@ -8,7 +8,9 @@ from .permissions import (
     HasTeamsOnGame,
     RequestMethodIsPut,
     IsDateAfterChampInitialDate,
+    IsInitialDateInFuture,
 )
+
 from utils.mixins import SerializerByMethodMixin
 from .models import Game
 from .serializers import (
@@ -31,15 +33,15 @@ class ListBettableGamesView(generics.ListAPIView):
     serializer_class = GamesToBetSerializer
 
 
-# IsValidTeams, IsDateAfterChampInitialDate, IsInitialDateInFuture
 class UpdateTeamsGameView(generics.UpdateAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [
         RequestMethodIsPut,
         IsStaffCampOwner,
         IsDateAfterChampInitialDate,
+         IsInitialDateInFuture,
     ]
-
+    
     lookup_url_kwarg = "game_id"
     queryset = Game.objects.all()
     serializer_class = GameUpdateSerializer
@@ -69,7 +71,7 @@ class UpdateTeamsGameView(generics.UpdateAPIView):
 
 class UpdateGameWinnerView(generics.UpdateAPIView):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsStaffCampOwner, HasTeamsOnGame]
+    permission_classes = [RequestMethodIsPut, IsStaffCampOwner, HasTeamsOnGame ]
     lookup_url_kwarg = "game_id"
     queryset = Game.objects.all()
     serializer_class = GameWinnerSerializer
