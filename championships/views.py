@@ -14,13 +14,14 @@ from .permissions import (
 from transactions.serializers import TransactionSerializer
 from .serializers import (
     CreateChampionshipsSerializer,
-    ListChampionshipsSerializer,
     ChampionshipDetailSerializer,
     RetrieveChampionShipWithGamesSerializer,
+    ListAllChampionshipsSerializer,
+    AddTeamOnChampionshipsSerializer,
     RetrieveChampionAddingGamesSerializer,
 )
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated
 from utils.permissions import IsStaff
 from teams.models import Team
 from rest_framework import views
@@ -28,13 +29,15 @@ from rest_framework import views
 
 class ListAllChampionshipsView(generics.ListAPIView):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsStaff, IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
 
-    serializer_class = ListChampionshipsSerializer
+    serializer_class = ListAllChampionshipsSerializer
     queryset = Championship.objects.all()
 
 
 class ListOneChampionshipView(generics.RetrieveAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = RetrieveChampionShipWithGamesSerializer
     queryset = Championship.objects.all()
     lookup_url_kwarg = "cs_id"
@@ -78,7 +81,7 @@ class AddTeamsInChampionshipView(generics.UpdateAPIView):
     ]
     queryset = Team.objects.all()
     lookup_url_kwarg = "team_id"
-    serializer_class = ListChampionshipsSerializer
+    serializer_class = AddTeamOnChampionshipsSerializer
 
     def patch(self, request, *args, **kwargs):
         # Linha 82 é o retorno do update do ListChampionshipSerializer, só feita a relação

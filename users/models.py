@@ -15,8 +15,8 @@ class User(AbstractUser):
 
     team = models.ForeignKey(
         "teams.Team",
-        on_delete=models.CASCADE,
         related_name="users",
+        on_delete=models.SET_NULL,
         null=True,
     )
 

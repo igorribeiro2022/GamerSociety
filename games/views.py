@@ -24,14 +24,12 @@ class ListBettableGamesView(generics.ListAPIView):
     serializer_class = GamesToBetSerializer
 
 
-class RetrieveUpdateDeleteGameView(SerializerByMethodMixin, generics.UpdateAPIView):
+class UpdateTeamsGameView(generics.UpdateAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsStaffCampOwner]
     lookup_url_kwarg = "game_id"
     queryset = Game.objects.all()
-    serializer_map = {
-        "PATCH": GameUpdateSerializer,
-    }
+    serializer_class = GameUpdateSerializer
 
 
 class UpdateGameWinnerView(generics.UpdateAPIView):
