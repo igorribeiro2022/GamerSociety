@@ -1,9 +1,8 @@
 from rest_framework.test import APITestCase
 from users.models import User
-from ..models import Team
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
-import ipdb
+from historys.models import History
 
 client = APIClient()
 
@@ -126,45 +125,49 @@ class TeamViewTest(APITestCase):
             "value": 1000
         }
 
-        def test_historys_exists(self):
+    def test_historys_exists(self):
 
-            staff = User.objects.create_user(**self.user_staff)
+        staff = User.objects.create_user(**self.user_staff)
 
-            response_create_player = client.post("/api/users/register/", self.user_player)
-            response_create_player1 = client.post("/api/users/register/", self.user_player1)
-            response_create_player2 = client.post("/api/users/register/", self.user_player2)
-            response_create_player3 = client.post("/api/users/register/", self.user_player3)
-            response_create_player4 = client.post("/api/users/register/", self.user_player4)
-            response_create_player5 = client.post("/api/users/register/", self.user_player5)
-            response_create_player5 = client.post("/api/users/register/", self.user_player6)
+        response_create_player = client.post("/api/users/register/", self.user_player)
+        response_create_player1 = client.post("/api/users/register/", self.user_player1)
+        response_create_player2 = client.post("/api/users/register/", self.user_player2)
+        response_create_player3 = client.post("/api/users/register/", self.user_player3)
+        response_create_player4 = client.post("/api/users/register/", self.user_player4)
+        response_create_player5 = client.post("/api/users/register/", self.user_player5)
+        response_create_player5 = client.post("/api/users/register/", self.user_player6)
 
-            token_staff = Token.objects.create(user=staff)
-            team_owner_id = response_create_player.data["id"]
-            team_owner = User.objects.get(id=team_owner_id)
-            team_owner_token = Token.objects.create(user=team_owner)
+        token_staff = Token.objects.create(user=staff)
+        team_owner_id = response_create_player.data["id"]
+        team_owner = User.objects.get(id=team_owner_id)
+        team_owner_token = Token.objects.create(user=team_owner)
 
 
-            client.credentials(HTTP_AUTHORIZATION=f"Token {team_owner_token}")
-            response_create_team = client.post("/api/teams/register/", self.team_model)
+        client.credentials(HTTP_AUTHORIZATION=f"Token {team_owner_token}")
+        response_create_team = client.post("/api/teams/register/", self.team_model)
 
-            team_id = response_create_team.data["id"]
+        team_id = response_create_team.data["id"]
 
-            client.credentials(HTTP_AUTHORIZATION=f"Token {token_staff}")
-            response_create_championship = client.post(f"/api/championships/register/", data=self.championship)
+        client.credentials(HTTP_AUTHORIZATION=f"Token {token_staff}")
+        response_create_championship = client.post(f"/api/championships/register/", data=self.championship)
             
-            championship_id = response_create_championship.data["id"]
+        championship_id = response_create_championship.data["id"]
 
-            client.credentials(HTTP_AUTHORIZATION=f"Token {token_staff}")
-            response_inser_players = client.patch(f"/api/teams/add/{team_id}/", data=self.players_to_add)
+        client.credentials(HTTP_AUTHORIZATION=f"Token {token_staff}")
+        response_inser_players = client.patch(f"/api/teams/add/{team_id}/", data=self.players_to_add)
 
-            client.credentials(HTTP_AUTHORIZATION=f"Token {team_owner_token}")
-            response_transaction = client.post(f"/api/transactions/", data=self.transaction)
+        client.credentials(HTTP_AUTHORIZATION=f"Token {team_owner_token}")
+        response_transaction = client.post(f"/api/transactions/", data=self.transaction)
 
-            client.credentials(HTTP_AUTHORIZATION=f"Token {team_owner_token}")
-            response_register_team_in_championship = client.patch(f"/api/championships/{championship_id}/add-teams/{team_id}/")
+        client.credentials(HTTP_AUTHORIZATION=f"Token {team_owner_token}")
+        response_register_team_in_championship = client.patch(f"/api/championships/{championship_id}/add-teams/{team_id}/")
 
-            client.credentials(HTTP_AUTHORIZATION=f"Token {team_owner_token}")
-            response_register_team_in_championship = client.patch(f"/api/teams/remove/{team_id}/")
+        client.credentials(HTTP_AUTHORIZATION=f"Token {team_owner_token}")
+        response_remove_team_from_championship = client.patch(f"/api/championships/remove/{team_id}/champ/{championship_id}/")
 
-            client.credentials(HTTP_AUTHORIZATION=f"Token {team_owner_token}")
-            response_remove_team_from_championship = client.patch(f"/api/championships/remove/{team_id}/champ/{championship_id}/")
+        team_owner_history_transactions_count = History.objects.get(id=team_owner.history.id).transactions.count()
+
+        self.assertEqual(3, team_owner_history_transactions_count)
+
+
+            
