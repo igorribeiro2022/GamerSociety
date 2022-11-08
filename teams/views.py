@@ -9,7 +9,6 @@ from django.shortcuts import get_object_or_404
 from championships.permissions import IsATeamOwner
 from championships.models import Championship
 from rest_framework import views
-import ipdb
 from transactions.serializers import TransactionSerializer
 
 

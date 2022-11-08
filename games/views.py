@@ -1,6 +1,5 @@
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
-import ipdb
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .permissions import (
@@ -105,7 +104,6 @@ class UpdateGameWinnerView(generics.UpdateAPIView):
 
     def put(self, request, *args, **kwargs):
         game = self.update(request, *args, **kwargs)
-        # ipdb.set_trace()
         
         game_obj = Game.objects.get(id=game.data['id'])
         bet = Bet.objects.get(game=game_obj)
@@ -121,7 +119,6 @@ class UpdateGameWinnerView(generics.UpdateAPIView):
         for user_b in users_bet:
             value = user_b.value
             user = User.objects.get(id=user_b.user.id)
-            ipdb.set_trace()
             prize = {"value": value * odd}
             trans = TransactionSerializer(data=prize)
             trans.is_valid(raise_exception=True)
@@ -168,7 +165,6 @@ class UpdateGameWinnerView(generics.UpdateAPIView):
             trans.is_valid(raise_exception=True)
             trans.save(user=user_to_reward)
 
-        # ipdb.set_trace()
         # TRIGGER TO CLOSE GAME BET AND GIVE MONEY
 
         return game

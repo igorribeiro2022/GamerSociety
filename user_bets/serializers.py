@@ -13,7 +13,6 @@ class UserBetCreateSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        import ipdb
 
         game_obj = validated_data.pop("game")
         team_obj = validated_data.pop("team")
@@ -34,7 +33,6 @@ class UserBetCreateSerializer(serializers.ModelSerializer):
                 bet_type.odd = bet.total_value / bet_type.total_value
                 bet_type.save()
                 user_bet = UserBet.objects.create(**validated_data, user=user_obj, bet_type=bet_type)
-                # ipdb.set_trace()
 
             if bet_type.total_value > 0:
                 bet_type.odd = bet.total_value / bet_type.total_value
