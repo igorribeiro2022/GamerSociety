@@ -5,7 +5,7 @@ import uuid
 class Transaction(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
     value = models.FloatField()
-    detail = models.CharField()
+    detail = models.CharField(max_length=250)
     date = models.DateTimeField(auto_now_add=True, blank=True)
     history = models.ForeignKey(
         "historys.History",
