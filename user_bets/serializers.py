@@ -3,7 +3,9 @@ from .models import UserBet
 from bet_types.models import BetType
 from transactions.serializers import TransactionSerializer
 from bets.models import Bet
-
+from games.models import Game
+from championships.models import Championship
+from teams.models import Team
 
 class UserBetCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -46,3 +48,67 @@ class UserBetCreateSerializer(serializers.ModelSerializer):
 
         # bet = UserBet.objects.create(**validated_data, user=user_obj, bet_type=bet_type)
         return user_bet
+
+
+
+class ListUserBetSerializer(serializers.ModelSerializer):
+    
+    odd = serializers.SerializerMethodField()
+    game_name = serializers.SerializerMethodField()
+    phase = serializers.SerializerMethodField()
+    championship = serializers.SerializerMethodField()
+    team_betted = serializers.SerializerMethodField()
+    won = serializers.SerializerMethodField()
+    class Meta:
+        model = UserBet
+        fields = [
+            "id",
+            "value",
+            "odd",
+            "game_name",
+            "phase",
+            "championship",
+            "team_betted",
+            "won",
+            ]
+        
+    def get_odd(self, user_bet: UserBet):
+        bet_type_id = user_bet.bet_type.id
+        return BetType.objects.get(id=bet_type_id).odd
+    
+    def get_won(self, user_bet: UserBet):
+        bet_type_id = user_bet.bet_type.id
+        bet_type = BetType.objects.get(id=bet_type_id)
+        if bet_type.winner == None:
+            return "Not defined" 
+        if bet_type.winner == bet_type.team: 
+            return True
+        return False
+        
+    def get_championship(self, user_bet: UserBet):
+        bet_type_id = user_bet.bet_type.id
+        bet_type = BetType.objects.get(id=bet_type_id)
+        champ_id = Game.objects.get(bet=bet_type.bet.id).championship.id
+        champ_name = Championship.objects.get(id=champ_id).name
+        return champ_name     
+    
+    def get_game_name(self, user_bet: UserBet):
+        bet_type_id = user_bet.bet_type.id
+        bet_type = BetType.objects.get(id=bet_type_id)
+        game_name = Game.objects.get(bet=bet_type.bet.id).name
+        return game_name
+    
+    def get_phase(self, user_bet: UserBet):
+        bet_type_id = user_bet.bet_type.id
+        bet_type = BetType.objects.get(id=bet_type_id)
+        game_phase = Game.objects.get(bet=bet_type.bet.id).phase
+        return game_phase
+    
+    def get_team_betted(self, user_bet: UserBet):
+        bet_type_id = user_bet.bet_type.id
+        bet_type_team = BetType.objects.get(id=bet_type_id).team
+        team_name = Team.objects.get(id=bet_type_team).name
+        return team_name
+    
+    
+    

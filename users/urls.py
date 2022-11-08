@@ -2,8 +2,10 @@ from django.urls import path, include
 from users import views
 from drf_spectacular.views import SpectacularSwaggerView, SpectacularAPIView
 
+
 urlpatterns = [
     path("users/", views.ListUsersView.as_view()),
+    path("users/bets/", views.ListUserBetsView.as_view()),
     path("users/register/", views.CreateUserView.as_view()),
     path("users/register/super/", views.CreateSuperUserView.as_view()),
     path("users/<str:user_id>/", views.RetrieveUpdateUserView.as_view()),

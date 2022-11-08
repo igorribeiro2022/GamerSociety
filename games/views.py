@@ -110,7 +110,9 @@ class UpdateGameWinnerView(generics.UpdateAPIView):
         bet.winner = game_obj.winner
         bet.save()
         bet_type_winner = BetType.objects.get(bet=bet, team=game_obj.winner)
+        bet_type_looser = BetType.objects.exclude(team=game_obj.winner).get(bet=bet)
         bet_type_winner.winner = game_obj.winner
+        bet_type_looser.winner = game_obj.winner
         bet_type_winner.save()
         users_bet = UserBet.objects.filter(bet_type=bet_type_winner)
         
