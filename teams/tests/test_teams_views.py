@@ -256,11 +256,7 @@ class TeamViewTest(APITestCase):
         client.credentials(HTTP_AUTHORIZATION=f"Token {token_staff}")
         response = client.patch(f"/api/teams/add/{team_created_by_staff.id}/", data=self.team_users_insert)
 
-        print()
-        print("="*50)
-        print(response)
-        print("="*50)
-        print()
+        self.assertEqual(200, response.status_code)
 
     def test_remove_team_from_championship(self):
         staff = User.objects.create_user(**self.user_staff)
@@ -299,4 +295,8 @@ class TeamViewTest(APITestCase):
         response_register_team_in_championship = client.patch(f"/api/championships/{championship_id}/add-teams/{team_id}/")
 
         client.credentials(HTTP_AUTHORIZATION=f"Token {team_owner_token}")
-        response_register_team_in_championship = client.patch(f"/api/teams/remove/{team_id}/")
+        response_remove_team_from_championship = client.patch(f"/api/championships/remove/{team_id}/champ/{championship_id}/")
+
+        self.assertEqual(204, response_remove_team_from_championship.status_code)
+
+
