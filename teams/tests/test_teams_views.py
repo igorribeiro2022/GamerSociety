@@ -3,7 +3,7 @@ from users.models import User
 from ..models import Team
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
-import ipdb
+from historys.models import History
 
 client = APIClient()
 
@@ -123,7 +123,7 @@ class TeamViewTest(APITestCase):
         } 
 
         cls.transaction = {
-            "value": 1000
+            "value": 1000.0
         }
 
     def test_tokens(self):
@@ -143,10 +143,10 @@ class TeamViewTest(APITestCase):
         token_player = Token.objects.create(user=player)
 
         client.credentials(HTTP_AUTHORIZATION=f"Token {token_staff}")
-        response = client.post("/api/teams/", self.team_model)
+        response = client.post("/api/teams/register/", self.team_model)
 
         client.credentials(HTTP_AUTHORIZATION=f"Token {token_player}")
-        response_player = client.post("/api/teams/", self.team_model)
+        response_player = client.post("/api/teams/register/", self.team_model)
 
         self.assertEqual(201, response.status_code)
         self.assertEqual(201, response_player.status_code)
@@ -157,15 +157,21 @@ class TeamViewTest(APITestCase):
         player = User.objects.create_user(**self.user_player)
         token_player = Token.objects.create(user=player)
 
-        team_created_by_staff = Team.objects.create(**self.team_model)
-
-        team_created_by_player = Team.objects.create(**self.team_model)
-
         client.credentials(HTTP_AUTHORIZATION=f"Token {token_staff}")
-        response = client.patch(f"/api/teams/{team_created_by_staff.id}/", self.team_model_updated)
+        response = client.post("/api/teams/register/", self.team_model)
+
+        team_created_by_staff = response.data["id"]
 
         client.credentials(HTTP_AUTHORIZATION=f"Token {token_player}")
-        response_player = client.patch(f"/api/teams/{team_created_by_player.id}/", self.team_model_updated)
+        response_player = client.post("/api/teams/register/", self.team_model)
+
+        team_created_by_player = response.data["id"]
+
+        client.credentials(HTTP_AUTHORIZATION=f"Token {token_staff}")
+        response = client.patch(f"/api/teams/{team_created_by_staff}/", data=self.team_model_updated)
+
+        client.credentials(HTTP_AUTHORIZATION=f"Token {token_player}")
+        response_player = client.patch(f"/api/teams/{team_created_by_player}/", data=self.team_model_updated)
 
         self.assertEqual(200, response.status_code)
         self.assertEqual(200, response_player.status_code)
@@ -190,19 +196,27 @@ class TeamViewTest(APITestCase):
 
     def test_player_delete_team_response(self):
 
-        user = User.objects.create_user(**self.user_staff)
+        staff = User.objects.create_user(**self.user_staff)
         player = User.objects.create_user(**self.user_player)
 
         token_player = Token.objects.create(user=player)
+        token_staff = Token.objects.create(user=staff)
 
-        team_created_by_player = Team.objects.create(**self.team_model)
-        team_created_by_staff = Team.objects.create(**self.team_model)
+        client.credentials(HTTP_AUTHORIZATION=f"Token {token_staff}")
+        response_staff = client.post("/api/teams/register/", self.team_model)
+
+        team_created_by_staff = response_staff.data["id"]
 
         client.credentials(HTTP_AUTHORIZATION=f"Token {token_player}")
-        response_player_204 = client.delete(f"/api/teams/{team_created_by_player.id}/")
+        response_player = client.post("/api/teams/register/", self.team_model)
+
+        team_created_by_player = response_player.data["id"]
 
         client.credentials(HTTP_AUTHORIZATION=f"Token {token_player}")
-        response_staff_403 = client.delete(f"/api/teams/{team_created_by_staff.id}/")
+        response_player_204 = client.delete(f"/api/teams/{team_created_by_player}/")
+
+        client.credentials(HTTP_AUTHORIZATION=f"Token {token_player}")
+        response_staff_403 = client.delete(f"/api/teams/{team_created_by_staff}/")
 
         self.assertEqual(204, response_player_204.status_code)
         self.assertEqual(403, response_staff_403.status_code)
@@ -256,11 +270,7 @@ class TeamViewTest(APITestCase):
         client.credentials(HTTP_AUTHORIZATION=f"Token {token_staff}")
         response = client.patch(f"/api/teams/add/{team_created_by_staff.id}/", data=self.team_users_insert)
 
-        print()
-        print("="*50)
-        print(response)
-        print("="*50)
-        print()
+        self.assertEqual(200, response.status_code)
 
     def test_remove_team_from_championship(self):
         staff = User.objects.create_user(**self.user_staff)
@@ -292,11 +302,31 @@ class TeamViewTest(APITestCase):
         client.credentials(HTTP_AUTHORIZATION=f"Token {token_staff}")
         response_inser_players = client.patch(f"/api/teams/add/{team_id}/", data=self.players_to_add)
 
+        team_owner_before_transaction = History.objects.get(id=team_owner.history.id).balance
+
         client.credentials(HTTP_AUTHORIZATION=f"Token {team_owner_token}")
         response_transaction = client.post(f"/api/transactions/", data=self.transaction)
+
+        team_owner_after_transaction = History.objects.get(id=team_owner.history.id).balance
 
         client.credentials(HTTP_AUTHORIZATION=f"Token {team_owner_token}")
         response_register_team_in_championship = client.patch(f"/api/championships/{championship_id}/add-teams/{team_id}/")
 
+        team_owner_after_register = History.objects.get(id=team_owner.history.id).balance
+
         client.credentials(HTTP_AUTHORIZATION=f"Token {team_owner_token}")
-        response_register_team_in_championship = client.patch(f"/api/teams/remove/{team_id}/")
+        response_remove_team_from_championship = client.patch(f"/api/championships/remove/{team_id}/champ/{championship_id}/")
+
+        team_owner_after_remove = History.objects.get(id=team_owner.history.id).balance
+
+        team_owner_transaction_recieved = team_owner_before_transaction < team_owner_after_transaction
+        team_owner_registered_team = team_owner_after_transaction > team_owner_after_register
+        team_owner_removed_team = team_owner_after_register < team_owner_after_remove
+
+        self.assertEqual(200, response_remove_team_from_championship.status_code)
+        self.assertTrue(team_owner_transaction_recieved)
+        self.assertTrue(team_owner_registered_team)
+        self.assertTrue(team_owner_removed_team)
+
+
+
