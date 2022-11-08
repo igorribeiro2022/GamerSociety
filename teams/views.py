@@ -2,9 +2,15 @@ from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
 from teams.models import Team
-from teams.serializers import TeamSerializer
+from teams.serializers import TeamSerializer, TeamDetailSerializer
 from users.models import User
-from .permissions import IsStaff, isAuth, AlreadyHaveATeam, PlayerToBeAddedAlreadyHasATeam, CanReallyAddThisUsersInTeam
+from .permissions import (
+    IsStaff,
+    isAuth,
+    AlreadyHaveATeam,
+    PlayerToBeAddedAlreadyHasATeam,
+    CanReallyAddThisUsersInTeam,
+)
 from django.shortcuts import get_object_or_404
 from championships.permissions import IsATeamOwner
 from championships.models import Championship
@@ -36,14 +42,17 @@ class RetrieveUpdateDeleteTeams(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsStaff]
 
     queryset = Team.objects.all()
-    serializer_class = TeamSerializer
+    serializer_class = TeamDetailSerializer
 
 
 class InsertUsersInTeams(generics.UpdateAPIView):
     authentication_classes = [TokenAuthentication]
 
-    permission_classes = [IsStaff, PlayerToBeAddedAlreadyHasATeam, CanReallyAddThisUsersInTeam]
-
+    permission_classes = [
+        IsStaff,
+        PlayerToBeAddedAlreadyHasATeam,
+        CanReallyAddThisUsersInTeam,
+    ]
 
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
@@ -65,18 +74,16 @@ class RemoveTeamFromChampionship(generics.UpdateAPIView):
     queryset = Team.objects.all()
     serializer_class = [TeamSerializer]
 
-    lookup_url_kwarg = ['team_id', 'championship_id']
+    lookup_url_kwarg = ["team_id", "championship_id"]
 
     def patch(self, request, *args, **kwargs):
-        champ_id = kwargs['championship_id']
-        team_id = kwargs['team_id']
+        champ_id = kwargs["championship_id"]
+        team_id = kwargs["team_id"]
         # team = Championship.objects.get(id=champ_id).teams.values().get(id=team_id)
         team = Team.objects.get(id=team_id)
         champ = Championship.objects.get(id=champ_id)
         queryset_champ = team.championship.all()
-        array = [
-            champ for champ in queryset_champ
-        ]
+        array = [champ for champ in queryset_champ]
         array.remove(champ)
         team.championship.set(array)
         team.save()
@@ -87,4 +94,4 @@ class RemoveTeamFromChampionship(generics.UpdateAPIView):
         trans.is_valid(raise_exception=True)
         trans.save(user=request.user)
 
-        return views.Response({'detail' : 'Team removed from this championship'})
+        return views.Response({"detail": "Team removed from this championship"})
