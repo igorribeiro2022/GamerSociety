@@ -11,6 +11,7 @@ from .permissions import (
     UserToBetIsInGame,
     TeamToBetWillPlayInGame,
     CantBetInUnactiveGameBet,
+    UserToBetIsStaffFromChampionship,
 )
 
 
@@ -22,6 +23,7 @@ class CreateUserBetView(generics.CreateAPIView):
         UserToBetIsInGame,
         TeamToBetWillPlayInGame,
         CantBetInUnactiveGameBet,
+        UserToBetIsStaffFromChampionship,
     ]
     lookup_url_kwarg = "game_id"
     queryset = UserBet.objects.all()

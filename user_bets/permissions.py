@@ -55,3 +55,10 @@ class CantBetInUnactiveGameBet(permissions.BasePermission):
         self.message = "This game bet is closed, you can only bet in active games bets"
         bet = Bet.objects.get(id=game.bet.id)
         return bet.is_active
+
+
+class UserToBetIsStaffFromChampionship(permissions.BasePermission):
+    def has_object_permission(self, request, view, game: Game):
+        self.message = "Not allowed to bet in games that you're staff"
+
+        return game.championship.staff_owner_id != request.user.id
