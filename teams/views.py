@@ -88,9 +88,12 @@ class RemoveTeamFromChampionship(generics.UpdateAPIView):
         team.championship.set(array)
         team.save()
 
-        prize = {"value": champ.entry_amount}
+        entry = {
+            "value": champ.entry_amount,
+            "detail": f"Reembolso do Campeonato: {champ.name}",
+        }
 
-        trans = TransactionSerializer(data=prize)
+        trans = TransactionSerializer(data=entry)
         trans.is_valid(raise_exception=True)
         trans.save(user=request.user)
 

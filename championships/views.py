@@ -105,7 +105,10 @@ class DeleteChampionshipView(generics.DestroyAPIView):
         for team in teams:
             for user in team.users.all():
                 if user.is_team_owner:
-                    prize = {"value": instance.entry_amount}
+                    prize = {
+                        "value": instance.entry_amount,
+                        "detail": f"Reembolso do Campeonato: {instance.name}",
+                    }
                     trans = TransactionSerializer(data=prize)
                     trans.is_valid(raise_exception=True)
                     trans.save(user=user)
@@ -144,7 +147,10 @@ class AddTeamsInChampionshipView(generics.UpdateAPIView):
         cham_serializer = RetrieveChampionAddingGamesSerializer(champ_updated)
         # Criar transação de entrada no camp
 
-        prize = {"value": -champ_updated.entry_amount}
+        prize = {
+            "value": -champ_updated.entry_amount,
+            "detail": f"Entrada no campeonato: {champ_updated.name}",
+        }
         trans = TransactionSerializer(data=prize)
         trans.is_valid(raise_exception=True)
         trans.save(user=request.user)

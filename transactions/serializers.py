@@ -6,7 +6,7 @@ from historys.models import History
 class TransactionSerializer(ModelSerializer):
     class Meta:
         model = Transaction
-        fields = ["value", "date", "history"]
+        fields = ["value", "date", "history", "detail"]
         read_only_fields = ["date", "history"]
 
     def create(self, validated_data):
@@ -28,4 +28,4 @@ class TransactionSerializer(ModelSerializer):
 class TransactionForBalanceSerializer(ModelSerializer):
     class Meta:
         model = Transaction
-        fields = ["value", "date"]
+        fields = ["value", "date", "detail"]
