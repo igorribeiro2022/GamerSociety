@@ -28,4 +28,4 @@ class TransactionSerializer(ModelSerializer):
 class TransactionForBalanceSerializer(ModelSerializer):
     class Meta:
         model = Transaction
-        fields = ["value", "date"]
+        fields = ["value", "date", "detail"]
