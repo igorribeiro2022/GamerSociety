@@ -1,4 +1,3 @@
-import ipdb
 from rest_framework import generics
 from .models import Championship
 from .permissions import (
@@ -110,7 +109,6 @@ class DeleteChampionshipView(generics.DestroyAPIView):
                     trans = TransactionSerializer(data=prize)
                     trans.is_valid(raise_exception=True)
                     trans.save(user=user)
-        # ipdb.set_trace()
         return instance.delete()
 
     # Comentado o perfom_create pois não se aplica dentro de uma classe que

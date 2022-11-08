@@ -1,7 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 from users.serializers import UserForTeamSerializer
 from .models import Team
-import ipdb
 
 
 class TeamSerializer(ModelSerializer):

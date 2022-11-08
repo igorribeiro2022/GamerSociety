@@ -178,8 +178,6 @@ class HistoryViewTest(TestCase):
 
         transactions = History.objects.get(id=team_owner.history.id).transactions.values()
 
-        import ipdb
-        ipdb.set_trace()
 
         for trans in transactions:
             self.assertIsInstance(Transaction.objects.get(id=trans["id"]), Transaction)

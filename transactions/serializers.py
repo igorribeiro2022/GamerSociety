@@ -14,7 +14,6 @@ class TransactionSerializer(ModelSerializer):
         user = validated_data.pop("user")
         # user_history = self.context['request'].user.history
         user_history = user.history
-        # ipdb.set_trace()
 
         transaction = Transaction.objects.create(**validated_data, history=user_history)
 

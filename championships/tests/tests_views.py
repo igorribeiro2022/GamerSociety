@@ -3,7 +3,6 @@ from championships.models import Championship
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
 from users.models import User
-import ipdb
 from django.forms.models import model_to_dict
 from games.models import Game
 from teams.models import Team
@@ -208,7 +207,6 @@ class ChampionshipViewTest(TestCase):
     
     # Teste retirado devido a não ter a necessidade de edição de um championship - Pedro L, Gustavo.
     # def test_champ_edit(self):
-    #     # ipdb.set_trace()
     #     #somente owner, testar se qualquer um pode, testar as chaves que podem ser editadas 
     #     ...
         
