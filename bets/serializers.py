@@ -12,6 +12,6 @@ class BetSerializer(serializers.ModelSerializer):
             "team_1",
             "team_2",
             "total_value",
-            "bet",
+            "bet_types",
         ]
         depth = 1
