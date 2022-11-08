@@ -30,12 +30,13 @@ class HasTeamsOnGame(permissions.BasePermission, NewClassPermission):
             has_team_2 = False
 
         return has_team_1 and has_team_2
-    
+
+
 class IsTeam1And2TheSame(permissions.BasePermission, NewClassPermission):
-    def has_date_permission(self, request, view, game: Game):
+    def has_permission(self, request, view):
         self.message = "Team_1 and team_2 must be different, check given teams"
-        team_1_id = request.data['team_1']
-        team_2_id = request.data['team_2']
+        team_1_id = request.data["team_1"]
+        team_2_id = request.data["team_2"]
         return team_1_id != team_2_id
 
 
@@ -103,4 +104,3 @@ class IsThere8TeamsInCamp(permissions.BasePermission, NewClassPermission):
         teams_in_champ = champ.teams.count()
         expected = 8
         return teams_in_champ == expected
-        
