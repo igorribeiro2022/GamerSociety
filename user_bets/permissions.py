@@ -62,3 +62,10 @@ class UserToBetIsStaffFromChampionship(permissions.BasePermission):
         self.message = "Not allowed to bet in games that you're staff"
 
         return game.championship.staff_owner_id != request.user.id
+    
+class CanBetAboveZeroChampionship(permissions.BasePermission):
+    def has_permission(self, request, view):
+        self.message = "Not allowed to bet zero units, must bet above zero"
+
+        return (request.data['value'] > 0)
+    

@@ -1,6 +1,6 @@
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
-from utils.permissions import IsStaff
+import ipdb
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .permissions import (
@@ -14,7 +14,7 @@ from .permissions import (
     IsTeam1And2TheSame
 
 )
-
+from user_bets.models import UserBet
 from utils.mixins import SerializerByMethodMixin
 from .models import Game
 from bet_types.models import BetType
@@ -103,9 +103,31 @@ class UpdateGameWinnerView(generics.UpdateAPIView):
     queryset = Game.objects.all()
     serializer_class = GameWinnerSerializer
 
-    def patch(self, request, *args, **kwargs):
-        game = self.partial_update(request, *args, **kwargs)
+    def put(self, request, *args, **kwargs):
+        game = self.update(request, *args, **kwargs)
         # ipdb.set_trace()
+        
+        game_obj = Game.objects.get(id=game.data['id'])
+        bet = Bet.objects.get(game=game_obj)
+        bet.winner = game_obj.winner
+        bet.save()
+        bet_type_winner = BetType.objects.get(bet=bet, team=game_obj.winner)
+        bet_type_winner.winner = game_obj.winner
+        bet_type_winner.save()
+        users_bet = UserBet.objects.filter(bet_type=bet_type_winner)
+        
+        odd = bet_type_winner.odd
+        
+        for user_b in users_bet:
+            value = user_b.value
+            user = User.objects.get(id=user_b.user.id)
+            ipdb.set_trace()
+            prize = {"value": value * odd}
+            trans = TransactionSerializer(data=prize)
+            trans.is_valid(raise_exception=True)
+            trans.save(user=user) 
+        
+        
         champ = Championship.objects.get(id=game.data["championship"])
         if game.data["winner"] == game.data["team_1"]:
             team_1_winner = Team.objects.get(id=game.data["team_1"])

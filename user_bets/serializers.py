@@ -26,15 +26,19 @@ class UserBetCreateSerializer(serializers.ModelSerializer):
 
         bets_types = BetType.objects.filter(bet=game_bet)
 
+        user_bet = None
+        
         for bet_type in bets_types:
             if bet_type.team == str(team_obj.id):
                 bet_type.total_value += validated_data["value"]
                 bet_type.odd = bet.total_value / bet_type.total_value
                 bet_type.save()
-                ipdb.set_trace()
+                user_bet = UserBet.objects.create(**validated_data, user=user_obj, bet_type=bet_type)
+                # ipdb.set_trace()
 
-            bet_type.odd = bet.total_value / bet_type.total_value
-            bet_type.save()
+            if bet_type.total_value > 0:
+                bet_type.odd = bet.total_value / bet_type.total_value
+                bet_type.save()
 
         bet_cost = {"value": -validated_data["value"]}
 
@@ -42,5 +46,5 @@ class UserBetCreateSerializer(serializers.ModelSerializer):
         trans.is_valid(raise_exception=True)
         trans.save(user=user_obj)
 
-        bet = UserBet.objects.create(**validated_data, user=user_obj, bet_type=bet_type)
-        return bet
+        # bet = UserBet.objects.create(**validated_data, user=user_obj, bet_type=bet_type)
+        return user_bet
