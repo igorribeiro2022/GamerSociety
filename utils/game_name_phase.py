@@ -7,7 +7,8 @@ class Phase(models.TextChoices):
     SEMI_LOWER_1 = "Semi Lower 1"
     SEMI_LOWER_2 = "Semi Lower 2"
     FINAL_UPPER = "Final Upper"
-    FINAL_LOWER = "Final Lower"
+    FINAL_LOWER_1 = "Final Lower 1"
+    FINAL_LOWER_2 = "Final Lower 2"
     FINAL_CHAMPIONS = "Final Champions"
     DEFAULT = "Not Subscribed"
 
@@ -71,7 +72,11 @@ game54 = {
 }
 game61 = {
     "name": Names.GAME_1,
-    "phase": Phase.FINAL_LOWER,
+    "phase": Phase.FINAL_LOWER_1,
+}
+game62 = {
+    "name": Names.GAME_1,
+    "phase": Phase.FINAL_LOWER_2,
 }
 
 games_list = []
@@ -89,5 +94,6 @@ games_list.append(game52)
 games_list.append(game53)
 games_list.append(game54)
 games_list.append(game61)
+games_list.append(game62)
 
     
