@@ -6,17 +6,32 @@ from rest_framework import generics
 from games.models import Game
 from teams.models import Team
 from django.shortcuts import get_object_or_404
-from .permissions import HasMoneyToBet, UserToBetIsInGame, TeamToBetWillPlayInGame, CantBetInUnactiveGameBet
+from .permissions import (
+    HasMoneyToBet,
+    UserToBetIsInGame,
+    TeamToBetWillPlayInGame,
+    CantBetInUnactiveGameBet,
+    UserToBetIsStaffFromChampionship,
+)
+
+
 class CreateUserBetView(generics.CreateAPIView):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated, HasMoneyToBet, UserToBetIsInGame, TeamToBetWillPlayInGame,  CantBetInUnactiveGameBet]
+    permission_classes = [
+        IsAuthenticated,
+        HasMoneyToBet,
+        UserToBetIsInGame,
+        TeamToBetWillPlayInGame,
+        CantBetInUnactiveGameBet,
+        UserToBetIsStaffFromChampionship,
+    ]
     lookup_url_kwarg = "game_id"
     queryset = UserBet.objects.all()
     serializer_class = UserBetCreateSerializer
-    
+
     def perform_create(self, serializer):
-        game_id = self.kwargs['game_id']
-        team_id = self.kwargs['team_id']
+        game_id = self.kwargs["game_id"]
+        team_id = self.kwargs["team_id"]
         game = get_object_or_404(Game, id=game_id)
         team = get_object_or_404(Team, id=team_id)
         self.check_object_permissions(self.request, game)

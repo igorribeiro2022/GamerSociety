@@ -4,30 +4,41 @@ from bet_types.models import BetType
 from transactions.serializers import TransactionSerializer
 from bets.models import Bet
 
+
 class UserBetCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserBet
         fields = [
             "value",
         ]
-        
+
     def create(self, validated_data):
-        game_obj = validated_data.pop('game')
-        team_obj = validated_data.pop('team')
-        user_obj = validated_data.pop('user')
+        import ipdb
+
+        game_obj = validated_data.pop("game")
+        team_obj = validated_data.pop("team")
+        user_obj = validated_data.pop("user")
         game_bet = game_obj.bet
-        
-        bet_type = BetType.objects.get(bet=game_bet, team=team_obj.id)
-        bet_type.total_value += validated_data['value']
-        bet_type.save() 
 
-        bet = Bet.objects.get(id = game_bet.id)
-        bet.total_value += validated_data['value']
-        bet.save() 
-        
-        prize = {"value": -validated_data['value']}
+        bet = Bet.objects.get(id=game_bet.id)
+        bet.total_value += validated_data["value"]
+        bet.save()
 
-        trans = TransactionSerializer(data=prize)
+        bets_types = BetType.objects.filter(bet=game_bet)
+
+        for bet_type in bets_types:
+            if bet_type.team == str(team_obj.id):
+                bet_type.total_value += validated_data["value"]
+                bet_type.odd = bet.total_value / bet_type.total_value
+                bet_type.save()
+                ipdb.set_trace()
+
+            bet_type.odd = bet.total_value / bet_type.total_value
+            bet_type.save()
+
+        bet_cost = {"value": -validated_data["value"]}
+
+        trans = TransactionSerializer(data=bet_cost)
         trans.is_valid(raise_exception=True)
         trans.save(user=user_obj)
 
