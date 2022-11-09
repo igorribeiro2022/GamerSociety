@@ -139,6 +139,22 @@ paths:
                 items:
                   $ref: '#/components/schemas/ListAllChampionships'
           description: ''
+  /api/championships/list-next/:
+    get:
+      operationId: api_championships_list_next_list
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ListAllChampionships'
+          description: ''
   /api/championships/register/:
     post:
       operationId: api_championships_register_create
@@ -165,6 +181,47 @@ paths:
               schema:
                 $ref: '#/components/schemas/CreateChampionships'
           description: ''
+  /api/championships/remove/{team_id}/champ/{championship_id}/:
+    put:
+      operationId: api_championships_remove_champ_update
+      parameters:
+      - in: path
+        name: championship_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: team_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: api_championships_remove_champ_partial_update
+      parameters:
+      - in: path
+        name: championship_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: team_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          description: No response body
   /api/games/:
     get:
       operationId: api_games_list
@@ -244,6 +301,83 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GameUpdate'
+          description: ''
+  /api/games/{game_id}/bet/:
+    get:
+      operationId: api_games_bet_retrieve
+      parameters:
+      - in: path
+        name: game_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bet'
+          description: ''
+  /api/games/{game_id}/bet/{team_id}/:
+    post:
+      operationId: api_games_bet_create
+      parameters:
+      - in: path
+        name: game_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: team_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserBetCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserBetCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserBetCreate'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserBetCreate'
+          description: ''
+  /api/games/{game_id}/retrieve/:
+    get:
+      operationId: api_games_retrieve_retrieve
+      parameters:
+      - in: path
+        name: game_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GamesToBet'
           description: ''
   /api/games/{game_id}/winner/:
     put:
@@ -370,7 +504,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Team'
+                $ref: '#/components/schemas/TeamDetail'
           description: ''
     put:
       operationId: api_teams_update
@@ -386,13 +520,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Team'
+              $ref: '#/components/schemas/TeamDetail'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Team'
+              $ref: '#/components/schemas/TeamDetail'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Team'
+              $ref: '#/components/schemas/TeamDetail'
         required: true
       security:
       - tokenAuth: []
@@ -401,7 +535,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Team'
+                $ref: '#/components/schemas/TeamDetail'
           description: ''
     patch:
       operationId: api_teams_partial_update
@@ -417,13 +551,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedTeam'
+              $ref: '#/components/schemas/PatchedTeamDetail'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedTeam'
+              $ref: '#/components/schemas/PatchedTeamDetail'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedTeam'
+              $ref: '#/components/schemas/PatchedTeamDetail'
       security:
       - tokenAuth: []
       responses:
@@ -431,7 +565,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Team'
+                $ref: '#/components/schemas/TeamDetail'
           description: ''
     delete:
       operationId: api_teams_destroy
@@ -720,6 +854,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserActivity'
           description: ''
+  /api/users/bets/:
+    get:
+      operationId: api_users_bets_list
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ListUserBet'
+          description: ''
   /api/users/register/:
     post:
       operationId: api_users_register_create
@@ -747,6 +897,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserCreate'
+          description: ''
+  /api/users/register/super/:
+    post:
+      operationId: api_users_register_super_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SuperUserCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SuperUserCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SuperUserCreate'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuperUserCreate'
           description: ''
 components:
   schemas:
@@ -812,6 +990,34 @@ components:
       - password
       - token
       - username
+    Bet:
+      type: object
+      properties:
+        initial_date:
+          type: string
+          format: date
+          readOnly: true
+        is_active:
+          type: boolean
+        team_1:
+          type: string
+          maxLength: 120
+        team_2:
+          type: string
+          maxLength: 120
+        total_value:
+          type: number
+          format: double
+        bet_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/Nested'
+          readOnly: true
+      required:
+      - bet_types
+      - initial_date
+      - team_1
+      - team_2
     BettableGamesChampionship:
       type: object
       properties:
@@ -922,12 +1128,12 @@ components:
           type: integer
         team_1:
           type: string
+          readOnly: true
           nullable: true
-          maxLength: 120
         team_2:
           type: string
+          readOnly: true
           nullable: true
-          maxLength: 120
         phase:
           allOf:
           - $ref: '#/components/schemas/PhaseEnum'
@@ -942,8 +1148,10 @@ components:
       - phase
       - result_team_1
       - result_team_2
+      - team_1
+      - team_2
       - winner
-    Games:
+    GamesForChamp:
       type: object
       properties:
         id:
@@ -980,11 +1188,7 @@ components:
           type: string
           nullable: true
           maxLength: 120
-        championship:
-          type: string
-          format: uuid
       required:
-      - championship
       - id
     GamesLowKeys:
       type: object
@@ -1068,6 +1272,43 @@ components:
       - name
       - prize
       - teams_in_champ
+    ListUserBet:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        value:
+          type: number
+          format: double
+        odd:
+          type: string
+          readOnly: true
+        game_name:
+          type: string
+          readOnly: true
+        phase:
+          type: string
+          readOnly: true
+        championship:
+          type: string
+          readOnly: true
+        team_betted:
+          type: string
+          readOnly: true
+        won:
+          type: string
+          readOnly: true
+      required:
+      - championship
+      - game_name
+      - id
+      - odd
+      - phase
+      - team_betted
+      - value
+      - won
     NameEnum:
       enum:
       - Game 1
@@ -1075,6 +1316,33 @@ components:
       - Game 3
       - Game 4
       type: string
+    Nested:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        total_value:
+          type: number
+          format: double
+        odd:
+          type: number
+          format: double
+        team:
+          type: string
+          maxLength: 120
+        winner:
+          type: string
+          nullable: true
+          maxLength: 120
+        bet:
+          type: string
+          format: uuid
+      required:
+      - bet
+      - id
+      - team
     PatchedAddTeamOnChampionships:
       type: object
       properties:
@@ -1146,12 +1414,12 @@ components:
           type: integer
         team_1:
           type: string
+          readOnly: true
           nullable: true
-          maxLength: 120
         team_2:
           type: string
+          readOnly: true
           nullable: true
-          maxLength: 120
         phase:
           allOf:
           - $ref: '#/components/schemas/PhaseEnum'
@@ -1189,6 +1457,41 @@ components:
           minimum: 0
         e_sport:
           $ref: '#/components/schemas/ESportEnum'
+        championship:
+          type: array
+          items:
+            type: string
+            format: uuid
+          readOnly: true
+    PatchedTeamDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserForTeam'
+          readOnly: true
+          nullable: true
+        name:
+          type: string
+          maxLength: 50
+        initials:
+          type: string
+          maxLength: 5
+        wins:
+          type: integer
+          readOnly: true
+        losses:
+          type: integer
+          readOnly: true
+        e_sport:
+          allOf:
+          - $ref: '#/components/schemas/ESportEnum'
+          readOnly: true
         championship:
           type: array
           items:
@@ -1259,9 +1562,11 @@ components:
       enum:
       - Quartas Upper
       - Semi Upper
-      - Semi Lower
+      - Semi Lower 1
+      - Semi Lower 2
       - Final Upper
-      - Final Lower
+      - Final Lower 1
+      - Final Lower 2
       - Final Champions
       - Not Subscribed
       type: string
@@ -1275,11 +1580,11 @@ components:
         games:
           type: array
           items:
-            $ref: '#/components/schemas/Games'
+            $ref: '#/components/schemas/GamesForChamp'
         teams:
           type: array
           items:
-            $ref: '#/components/schemas/Team'
+            $ref: '#/components/schemas/TeamsForChamp'
         name:
           type: string
           maxLength: 120
@@ -1310,6 +1615,63 @@ components:
       - prize
       - staff_owner
       - teams
+    SuperUserCreate:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        username:
+          type: string
+          maxLength: 20
+        nickname:
+          type: string
+          maxLength: 20
+        password:
+          type: string
+          writeOnly: true
+        birthday:
+          type: string
+          format: date
+        email:
+          type: string
+        is_active:
+          type: boolean
+          readOnly: true
+        is_player:
+          type: boolean
+          nullable: true
+        team:
+          type: string
+          format: uuid
+          nullable: true
+        is_staff:
+          type: boolean
+          default: false
+        is_team_owner:
+          type: boolean
+          nullable: true
+        is_superuser:
+          type: boolean
+          title: Superuser status
+          description: Designates that this user has all permissions without explicitly
+            assigning them.
+        date_joined:
+          type: string
+          format: date-time
+        balance:
+          type: string
+          readOnly: true
+      required:
+      - balance
+      - birthday
+      - email
+      - id
+      - is_active
+      - nickname
+      - password
+      - username
     Team:
       type: object
       properties:
@@ -1351,6 +1713,63 @@ components:
       - initials
       - name
       - users
+    TeamDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserForTeam'
+          readOnly: true
+          nullable: true
+        name:
+          type: string
+          maxLength: 50
+        initials:
+          type: string
+          maxLength: 5
+        wins:
+          type: integer
+          readOnly: true
+        losses:
+          type: integer
+          readOnly: true
+        e_sport:
+          allOf:
+          - $ref: '#/components/schemas/ESportEnum'
+          readOnly: true
+        championship:
+          type: array
+          items:
+            type: string
+            format: uuid
+          readOnly: true
+      required:
+      - championship
+      - e_sport
+      - id
+      - initials
+      - losses
+      - name
+      - users
+      - wins
+    TeamsForChamp:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+      required:
+      - id
+      - name
     Transaction:
       type: object
       properties:
@@ -1365,8 +1784,12 @@ components:
           type: string
           format: uuid
           readOnly: true
+        detail:
+          type: string
+          maxLength: 250
       required:
       - date
+      - detail
       - history
       - value
     User:
@@ -1441,6 +1864,14 @@ components:
             this instead of deleting accounts.
       required:
       - id
+    UserBetCreate:
+      type: object
+      properties:
+        value:
+          type: number
+          format: double
+      required:
+      - value
     UserCreate:
       type: object
       properties:
