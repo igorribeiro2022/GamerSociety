@@ -11,6 +11,7 @@ from .permissions import (
     IsThere8TeamsInCamp,
     IsValidTeam,
     IsTeam1And2TheSame,
+    IsWinnerOneOfGameTeams,
 )
 from user_bets.models import UserBet
 from utils.mixins import SerializerByMethodMixin
@@ -89,7 +90,8 @@ class UpdateTeamsGameView(generics.UpdateAPIView):
 
 class UpdateGameWinnerView(generics.UpdateAPIView):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [RequestMethodIsPut, IsStaffCampOwner, HasTeamsOnGame]
+    #ver se winner passado é um dos times
+    permission_classes = [RequestMethodIsPut, IsStaffCampOwner, HasTeamsOnGame, IsWinnerOneOfGameTeams]
     lookup_url_kwarg = "game_id"
     queryset = Game.objects.all()
     serializer_class = GameWinnerSerializer

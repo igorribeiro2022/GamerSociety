@@ -60,3 +60,8 @@ class TeamSerializerReturn(ModelSerializer):
 #     users = UserSerializer(read_only=True, many=True)
 #     championship = ChampionshipSerializer(read_only=True, null=True)
 #     owner = UserSerializer(read_only=True)
+
+class TeamsForChampSerializer(ModelSerializer):
+    class Meta:
+        model = Team
+        fields = ["id", "name"]
