@@ -7,6 +7,8 @@ from games.models import Game
 from championships.models import Championship
 from teams.models import Team
 
+from django.shortcuts import get_object_or_404
+
 
 class UserBetCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -43,7 +45,7 @@ class UserBetCreateSerializer(serializers.ModelSerializer):
                 bet_type.odd = bet.total_value / bet_type.total_value
                 bet_type.save()
 
-        champ = Championship.objects.get(id=game_obj.championship)
+        champ = get_object_or_404(Championship, id=game_obj.championship.id)
         bet_cost = {
             "value": -validated_data["value"],
             "detail": f"Aposta feita no jogo: {champ.name} - {game_obj.phase} {game_obj.name}",
