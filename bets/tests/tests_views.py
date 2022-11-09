@@ -86,37 +86,12 @@ class BetTestView(TestCase):
             owner_team.is_team_owner = True
             owner_team.save()
 
-        token_owner1 = Token.objects.create(user=self.players[0])
-        client.credentials(HTTP_AUTHORIZATION=f"Token {token_owner1}")
-        client.patch(f"/api/championships/{championship.id}/add-teams/{teams[0].id}/")
-
-        token_owner2 = Token.objects.create(user=self.players[5])
-        client.credentials(HTTP_AUTHORIZATION=f"Token {token_owner2}")
-        client.patch(f"/api/championships/{championship.id}/add-teams/{teams[1].id}/")
-
-        token_owner3 = Token.objects.create(user=self.players[10])
-        client.credentials(HTTP_AUTHORIZATION=f"Token {token_owner3}")
-        client.patch(f"/api/championships/{championship.id}/add-teams/{teams[2].id}/")
-
-        token_owner4 = Token.objects.create(user=self.players[15])
-        client.credentials(HTTP_AUTHORIZATION=f"Token {token_owner4}")
-        client.patch(f"/api/championships/{championship.id}/add-teams/{teams[3].id}/")
-
-        token_owner5 = Token.objects.create(user=self.players[20])
-        client.credentials(HTTP_AUTHORIZATION=f"Token {token_owner5}")
-        client.patch(f"/api/championships/{championship.id}/add-teams/{teams[4].id}/")
-
-        token_owner6 = Token.objects.create(user=self.players[25])
-        client.credentials(HTTP_AUTHORIZATION=f"Token {token_owner6}")
-        client.patch(f"/api/championships/{championship.id}/add-teams/{teams[5].id}/")
-
-        token_owner7 = Token.objects.create(user=self.players[30])
-        client.credentials(HTTP_AUTHORIZATION=f"Token {token_owner7}")
-        client.patch(f"/api/championships/{championship.id}/add-teams/{teams[6].id}/")
-
-        token_owner8 = Token.objects.create(user=self.players[35])
-        client.credentials(HTTP_AUTHORIZATION=f"Token {token_owner8}")
-        client.patch(f"/api/championships/{championship.id}/add-teams/{teams[7].id}/")
+        for i in range(8):
+            token_owner = Token.objects.create(user=self.players[i * 5])
+            client.credentials(HTTP_AUTHORIZATION=f"Token {token_owner}")
+            client.patch(
+                f"/api/championships/{championship.id}/add-teams/{teams[i].id}/"
+            )
 
         games = Game.objects.filter(championship=championship)
 
