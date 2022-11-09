@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from teams.views import RemoveTeamFromChampionship
 
 
 urlpatterns = [
@@ -7,6 +8,10 @@ urlpatterns = [
         "championships/list/",
         views.ListAllChampionshipsView.as_view(),
     ),  # listar todos
+    path(
+        "championships/list-next/",
+        views.ListNextChampionshipsView.as_view(),
+    ),  # listar próximos
     path(
         "championships/register/",
         views.CreateChampionshipsView.as_view(),
@@ -23,4 +28,5 @@ urlpatterns = [
         "championships/<str:cs_id>/add-teams/<str:team_id>/",
         views.AddTeamsInChampionshipView.as_view(),
     ),  # nova view, serializers
+    path("championships/remove/<str:team_id>/champ/<str:championship_id>/", RemoveTeamFromChampionship.as_view())
 ]

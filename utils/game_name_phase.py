@@ -4,9 +4,11 @@ from django.db import models
 class Phase(models.TextChoices):
     QUARTERS_UPPER = "Quartas Upper"
     SEMI_UPPER = "Semi Upper"
-    SEMI_LOWER = "Semi Lower"
+    SEMI_LOWER_1 = "Semi Lower 1"
+    SEMI_LOWER_2 = "Semi Lower 2"
     FINAL_UPPER = "Final Upper"
-    FINAL_LOWER = "Final Lower"
+    FINAL_LOWER_1 = "Final Lower 1"
+    FINAL_LOWER_2 = "Final Lower 2"
     FINAL_CHAMPIONS = "Final Champions"
     DEFAULT = "Not Subscribed"
 
@@ -54,15 +56,27 @@ game41 = {
 
 game51 = {
     "name": Names.GAME_1,
-    "phase": Phase.SEMI_LOWER,
+    "phase": Phase.SEMI_LOWER_1,
 }
 game52 = {
     "name": Names.GAME_2,
-    "phase": Phase.SEMI_LOWER,
+    "phase": Phase.SEMI_LOWER_1,
+}
+game53 = {
+    "name": Names.GAME_1,
+    "phase": Phase.SEMI_LOWER_2,
+}
+game54 = {
+    "name": Names.GAME_2,
+    "phase": Phase.SEMI_LOWER_2,
 }
 game61 = {
     "name": Names.GAME_1,
-    "phase": Phase.FINAL_LOWER,
+    "phase": Phase.FINAL_LOWER_1,
+}
+game62 = {
+    "name": Names.GAME_1,
+    "phase": Phase.FINAL_LOWER_2,
 }
 
 games_list = []
@@ -77,6 +91,9 @@ games_list.append(game31)
 games_list.append(game41)
 games_list.append(game51)
 games_list.append(game52)
+games_list.append(game53)
+games_list.append(game54)
 games_list.append(game61)
+games_list.append(game62)
 
     

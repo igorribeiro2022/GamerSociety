@@ -1,7 +1,6 @@
 from rest_framework.test import APIClient
 from django.test import TestCase
 from users.models import User
-import ipdb
 import json
 
 client = APIClient()
@@ -189,7 +188,6 @@ class UsersViewTest(TestCase):
         client.credentials(HTTP_AUTHORIZATION='Token ' + response_login_staff.json()['token'])
         
         response_list_2 = client.get('/api/users/')
-        # ipdb.set_trace()
         has_balance = False
         if "balance" in response_list_2.json()[0].keys():
             has_balance = True
@@ -224,7 +222,6 @@ class UsersViewTest(TestCase):
         self.assertEqual(response_list.status_code, 403, msg)
         
         response_list_2 = client.get(f"/api/users/{user_staff_created.id}/")
-        # ipdb.set_trace()
         
         self.assertEqual(response_list_2.status_code, 200, msg_1)
         self.assertEqual(response_list_2.json()['balance'], 0.0, msg_2)

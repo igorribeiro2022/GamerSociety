@@ -1,11 +1,11 @@
 from rest_framework import serializers
 from games.models import Game
-from teams.serializers import TeamSerializer, TeamSerializerReturn
+from teams.serializers import TeamSerializer, TeamSerializerReturn, TeamsForChampSerializer
 from .models import Championship
 from utils.game_name_phase import Names, Phase, games_list
 from utils.e_sports_choices import ESportChoices
 from teams.models import Team
-from games.serializers import GamesSerializer, GamesLowKeysSerializer
+from games.serializers import GamesSerializer, GamesLowKeysSerializer, GamesForChampSerializer
 
 
 class CreateChampionshipsSerializer(serializers.ModelSerializer):
@@ -125,8 +125,8 @@ class RetrieveChampionShipWithGamesSerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields = ["id"]
 
-    games = GamesSerializer(many=True)
-    teams = TeamSerializer(many=True)
+    games = GamesForChampSerializer(many=True)
+    teams = TeamsForChampSerializer(many=True)
 
 
 class RetrieveChampionAddingGamesSerializer(RetrieveChampionShipWithGamesSerializer):

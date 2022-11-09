@@ -3,7 +3,6 @@ from championships.models import Championship
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
 from users.models import User
-import ipdb
 from django.forms.models import model_to_dict
 from games.models import Game
 from teams.models import Team
@@ -106,7 +105,7 @@ class ChampionshipViewTest(TestCase):
         cls.championship = {
             "name": "VALORANT $75 PRIZE",
             "initial_date": "2022-11-22",
-            "e-sport": "Valorant",
+            "e_sport": "Valorant",
             "entry_amount": 10.0,
             "prize": 75.0
         }
@@ -114,7 +113,7 @@ class ChampionshipViewTest(TestCase):
         cls.championship_other_data = {
             "name": "VALORANT $85 PRIZE",
             "initial_date": "2022-11-23",
-            "e-sport": "Valorant",
+            "e_sport": "Valorant",
             "entry_amount": 10.0,
             "prize": 85.0
         }
@@ -123,7 +122,7 @@ class ChampionshipViewTest(TestCase):
             "id": str,
             "name": "VALORANT $75 PRIZE",
             "initial_date": "2022-11-22",
-            "e-sport": "Valorant",
+            "e_sport": "Valorant",
             "winner": str,
             "staff_owner": object,
             "entry_amount": 10.0,
@@ -136,7 +135,7 @@ class ChampionshipViewTest(TestCase):
             "id": str,
             "name": "VALORANT $75 PRIZE",
             "initial_date": "2022-11-22",
-            "e-sport": "Valorant",
+            "e_sport": "Valorant",
             "winner": str,
             "staff_owner": object,
             "teams": [Team],
@@ -146,7 +145,7 @@ class ChampionshipViewTest(TestCase):
         cls.championship_wrong_keys = {
             "name": "VALORANT $75 PRIZE",
             "initial_date": "2022-11-22",
-            "e-sport": "VALORANT",
+            "e_sport": "VALORANT",
             "entry_amount": "$10",
             "prize": "$75"
         }
@@ -208,7 +207,6 @@ class ChampionshipViewTest(TestCase):
     
     # Teste retirado devido a não ter a necessidade de edição de um championship - Pedro L, Gustavo.
     # def test_champ_edit(self):
-    #     # ipdb.set_trace()
     #     #somente owner, testar se qualquer um pode, testar as chaves que podem ser editadas 
     #     ...
         

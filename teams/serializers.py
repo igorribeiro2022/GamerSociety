@@ -3,6 +3,23 @@ from users.serializers import UserForTeamSerializer
 from .models import Team
 
 
+class TeamDetailSerializer(ModelSerializer):
+    class Meta:
+        model = Team
+        fields = "__all__"
+        read_only_fields = [
+            "championship",
+            "users",
+            "id",
+            "wins",
+            "losses",
+            "e_sport",
+        ]
+
+    # championship = ListChampionshipsSerializer(read_only=True, allow_null=True)
+    users = UserForTeamSerializer(many=True, allow_null=True, read_only=True)
+
+
 class TeamSerializer(ModelSerializer):
     class Meta:
         model = Team
@@ -14,8 +31,6 @@ class TeamSerializer(ModelSerializer):
 
     def update(self, instance, validated_data):
         users_list = validated_data["users"]
-
-        # ipdb.set_trace()
 
         for user in users_list:
             instance.users.add(user)
@@ -45,3 +60,8 @@ class TeamSerializerReturn(ModelSerializer):
 #     users = UserSerializer(read_only=True, many=True)
 #     championship = ChampionshipSerializer(read_only=True, null=True)
 #     owner = UserSerializer(read_only=True)
+
+class TeamsForChampSerializer(ModelSerializer):
+    class Meta:
+        model = Team
+        fields = ["id", "name"]

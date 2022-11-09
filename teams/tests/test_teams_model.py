@@ -20,7 +20,7 @@ class TeamTestClass(TestCase):
         cls.team_model = {
             'name': 'Pain Gaming',
             'initials': 'PNG',
-            'e_sports': 'League of Legends'
+            'e_sport': 'League of Legends'
         }
         # cls.team_in_champ_model = {
         #     'name': 'Pain Gaming',
@@ -33,7 +33,7 @@ class TeamTestClass(TestCase):
             'initials': 'PNG',
             'wins': 0,
             'losses': 0,
-            'e_sports': 'League of Legends',
+            'e_sport': 'League of Legends',
             'championship': 'Is not in a championship'
         }
         # cls.in_championship_team_created = {
@@ -50,7 +50,7 @@ class TeamTestClass(TestCase):
         self.assertTrue(bool(team.id))
         self.assertTrue(bool(team.name))
         self.assertTrue(bool(team.initials))
-        self.assertTrue(bool(team.e_sports))
+        self.assertTrue(bool(team.e_sport))
     
     def test_team_instances(self):
 

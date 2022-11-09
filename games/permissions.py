@@ -21,7 +21,7 @@ class IsStaffCampOwner(permissions.BasePermission, NewClassPermission):
 
 class HasTeamsOnGame(permissions.BasePermission, NewClassPermission):
     def has_object_permission(self, request, view, game: Game):
-        self.message = "You must edit game teams to set winner one"
+        self.message = "You must set teams in game firts, to set winner one"
         has_team_1 = True
         has_team_2 = True
         if game.team_1 == None:
@@ -30,6 +30,14 @@ class HasTeamsOnGame(permissions.BasePermission, NewClassPermission):
             has_team_2 = False
 
         return has_team_1 and has_team_2
+
+
+class IsTeam1And2TheSame(permissions.BasePermission, NewClassPermission):
+    def has_permission(self, request, view):
+        self.message = "Team_1 and team_2 must be different, check given teams"
+        team_1_id = request.data["team_1"]
+        team_2_id = request.data["team_2"]
+        return team_1_id != team_2_id
 
 
 class RequestMethodIsPut(permissions.BasePermission, NewClassPermission):
@@ -57,8 +65,8 @@ class IsDateAfterChampInitialDate(permissions.BasePermission, NewClassPermission
         return game_data_in_seconds > champ_date_in_seconds
 
 
-class IsVadlidTeam(permissions.BasePermission, NewClassPermission):
-    def has_object_permission(self, request: Request, view: View, game: Game) -> bool:
+class IsValidTeam(permissions.BasePermission, NewClassPermission):
+    def has_date_permission(self, request: Request, view: View, game: Game) -> bool:
         self.message = "Teams provided are not in championship"
         champ = Championship.objects.get(id=game.championship.id)
         champ_teams = champ.teams.all()
@@ -76,7 +84,7 @@ class IsVadlidTeam(permissions.BasePermission, NewClassPermission):
 
 
 class IsInitialDateInFuture(permissions.BasePermission, NewClassPermission):
-    def has_date_permission(self, request: Request, view: View):
+    def has_date_permission(self, request: Request, view: View, game: Game):
         self.message = "Initial date must be future days"
         initial_date_list = request.data["initial_date"].split("-")
         date_now = datetime.now().timestamp()
@@ -87,3 +95,18 @@ class IsInitialDateInFuture(permissions.BasePermission, NewClassPermission):
         )
         game_date_in_seconds = game_date.timestamp()
         return game_date_in_seconds > date_now
+
+
+class IsThere8TeamsInCamp(permissions.BasePermission, NewClassPermission):
+    def has_object_permission(self, request, view, game: Game):
+        self.message = "Championship must be full to init one game, check championship teams, must have eigth"
+        champ = Championship.objects.get(id=game.championship.id)
+        teams_in_champ = champ.teams.count()
+        expected = 8
+        return teams_in_champ == expected
+
+class IsWinnerOneOfGameTeams(permissions.BasePermission, NewClassPermission):
+    def has_object_permission(self, request: Request, view: View, game: Game):
+        self.message = "Winner settled isn't in game"
+        winner = request.data['winner']
+        return (winner == game.team_1 or winner == game.team_2)
