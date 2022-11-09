@@ -1,6 +1,7 @@
 from rest_framework import permissions
 from users.models import User
 from teams.models import Team
+from django.shortcuts import get_object_or_404
 
 
 class IsStaff(permissions.BasePermission):
@@ -17,6 +18,7 @@ class IsStaff(permissions.BasePermission):
             if request.user.is_team_owner == True:
                 return bool(request.user.team_id == obj.id)
             return bool(request.user.is_staff)
+
 
 class isAuth(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -38,7 +40,7 @@ class PlayerToBeAddedAlreadyHasATeam(permissions.BasePermission):
     def has_permission(self, request, view):
         self.message = "Some player that you're tryng to add already has a team"
         for key, value in request.data.items():
-            user = User.objects.get(username=value)
+            user = get_object_or_404(User, username=value)
             if user.team_id != None:
                 return False
         return True
