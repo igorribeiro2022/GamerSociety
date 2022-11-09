@@ -7,6 +7,21 @@ class GamesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
         fields = "__all__"
+        
+class GamesForChampSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Game
+        fields = [
+            "id",
+            "name",
+            "phase",
+            "initial_date",
+            "winner",
+            "result_team_1",
+            "result_team_2",
+            "team_1",
+            "team_2",
+        ]
 
 
 class GamesLowKeysSerializer(serializers.ModelSerializer):

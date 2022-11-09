@@ -104,3 +104,9 @@ class IsThere8TeamsInCamp(permissions.BasePermission, NewClassPermission):
         teams_in_champ = champ.teams.count()
         expected = 8
         return teams_in_champ == expected
+
+class IsWinnerOneOfGameTeams(permissions.BasePermission, NewClassPermission):
+    def has_object_permission(self, request: Request, view: View, game: Game):
+        self.message = "Winner settled isn't in game"
+        winner = request.data['winner']
+        return (winner == game.team_1 or winner == game.team_2)
